@@ -1,0 +1,32 @@
+TextSecure-AB-BA.STD.NO_REPLAY_PROT
+RESULT Could not prove event inj:Recv3(a, as, b, bs, sb, a1, a2, m) ==> inj:Send3(a, as, b, bs, sb, a1, a2, m).
+255.140s (user 254.484s + system 0.656s), max rss 7751120K
+TextSecure-AB-BA.FS.NO_REPLAY_PROT
+All queries proved.
+238.483s (user 237.507s + system 0.976s), max rss 11136784K
+TextSecure-AB-BA.STD.REPLAY_PROT
+All queries proved.
+220.374s (user 219.918s + system 0.456s), max rss 6995376K
+TextSecure-AB-BA.FS.REPLAY_PROT
+All queries proved.
+253.556s (user 252.640s + system 0.916s), max rss 9877776K
+
+TextSecure-AA.STD.NO_REPLAY_PROT
+RESULT Could not prove event inj:Recv3(a, as, b, bs, sb, a1, a2, m) ==> inj:Send3(a, as, b, bs, sb, a1, a2, m).
+215.325s (user 214.721s + system 0.604s), max rss 7706704K
+TextSecure-AA.FS.NO_REPLAY_PROT
+All queries proved.
+423.942s (user 422.562s + system 1.380s), max rss 14739728K
+TextSecure-AA.STD.REPLAY_PROT
+All queries proved.
+194.588s (user 194.012s + system 0.576s), max rss 7909072K
+TextSecure-AA.FS.REPLAY_PROT
+All queries proved.
+444.088s (user 442.916s + system 1.172s), max rss 13481552K
+
+TextSecure-KCI.NO_REPLAY_PROT
+RESULT Could not prove event inj:Recv3(a, as, b, bs, sb, a1, a2, m) ==> inj:Send3(a, as, b, bs, sb, a1, a2, m).
+194.616s (user 194.136s + system 0.480s), max rss 5952784K
+TextSecure-KCI.REPLAY_PROT
+All queries proved.
+161.690s (user 161.262s + system 0.428s), max rss 5696992K

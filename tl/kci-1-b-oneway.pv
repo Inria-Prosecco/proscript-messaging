@@ -1,0 +1,141 @@
+const number_1:number [data].
+const string_tl1:bitstring [data].
+const string_tl2:bitstring [data].
+const string_tl3:bitstring [data].
+const string_tl4:bitstring [data].
+const string_tl5:bitstring [data].
+const string_tl6:bitstring [data].
+const string_tl7:bitstring [data].
+const string_tl8:bitstring [data].
+const string_tl9:bitstring [data].
+
+free secMsg1:bitstring [private].
+event Send(key, key, bitstring).
+event Recv(key, key, bitstring).
+query a:key,b:key,m:bitstring; event(Recv(a, b, m)) ==> event(Send(a, b, m)).
+query a:key,b:key,m:bitstring; event(Recv(a, b, m)).
+query a:key,b:key,m:bitstring; event(Send(a, b, m)).
+
+let Initiator(
+	initiatorIdentityKey:object_keypair,
+	initiatorSignedPreKey:object_keypair,
+	initiatorPreKey:object_keypair,
+	responderIdentityKeyPub:key,
+	responderIdentityDHKeyPub:key
+) =
+	out(io, (
+		Object_keypair_get_pub(initiatorSignedPreKey),
+		ProScript_crypto_ED25519_signature(
+			Type_key_toBitstring(Object_keypair_get_pub(initiatorSignedPreKey)),
+			Object_keypair_get_priv(initiatorIdentityKey),
+			Object_keypair_get_pub(initiatorIdentityKey)
+		),
+		Object_keypair_get_pub(initiatorPreKey)
+	));
+	in(io, (
+		responderSignedPreKeyPub:key,
+		responderSignedPreKeySignature:bitstring,
+		responderPreKeyPub:key
+	));
+	let them = fun_newSession(
+		initiatorSignedPreKey,
+		initiatorPreKey,
+		Type_key_toBitstring(responderIdentityKeyPub),
+		Type_key_toBitstring(responderIdentityDHKeyPub),
+		Type_key_toBitstring(responderSignedPreKeyPub),
+		responderSignedPreKeySignature,
+		Type_key_toBitstring(responderPreKeyPub),
+		number_1
+	) in
+	let s1 = fun_send(initiatorIdentityKey, them, secMsg1) in
+	let o1 = Object_sendoutput_get_output(s1) in
+	if (Object_msg_get_valid(o1) = true) then (
+		let them = Object_sendoutput_get_them(s1) in
+		event Send(
+			Object_keypair_get_pub(initiatorIdentityKey),
+			Object_them_get_identityKey(them), secMsg1
+		);
+		out(io, o1)
+	).
+
+let Responder(
+	responderIdentityKey:object_keypair,
+	responderSignedPreKey:object_keypair,
+	responderPreKey:object_keypair,
+	initiatorIdentityKeyPub:key,
+	initiatorIdentityDHKeyPub:key
+) =
+	out(io, (
+		responderIdentityKey,
+		responderSignedPreKey,
+		Object_keypair_get_pub(responderPreKey),
+		initiatorIdentityKeyPub,
+		initiatorIdentityDHKeyPub
+	));
+	phase 1;
+	out(io, (
+		Object_keypair_get_pub(responderSignedPreKey),
+		ProScript_crypto_ED25519_signature(
+			Type_key_toBitstring(Object_keypair_get_pub(responderSignedPreKey)),
+			Object_keypair_get_priv(responderIdentityKey),
+			Object_keypair_get_pub(responderIdentityKey)
+		),
+		Object_keypair_get_pub(responderPreKey)
+	));
+	in(io, (
+		initiatorSignedPreKeyPub:key,
+		initiatorSignedPreKeySignature:bitstring,
+		initiatorPreKeyPub:key
+	));
+	let them = fun_newSession(
+		responderSignedPreKey,
+		responderPreKey,
+		Type_key_toBitstring(initiatorIdentityKeyPub),
+		Type_key_toBitstring(initiatorIdentityDHKeyPub),
+		Type_key_toBitstring(initiatorSignedPreKeyPub),
+		initiatorSignedPreKeySignature,
+		Type_key_toBitstring(initiatorPreKeyPub),
+		number_1
+	) in
+	in(io, o1:object_msg);
+	let s2 = fun_recv(responderIdentityKey, responderSignedPreKey, them, o1) in
+	let o2 = Object_recvoutput_get_output(s2) in
+	if (Object_msg_get_valid(o2) = true) then (
+		event Recv(
+			Object_them_get_identityKey(them),
+			Object_keypair_get_pub(responderIdentityKey),
+			Object_recvoutput_get_plaintext(s2)
+		)
+	).
+
+process
+
+let aliceIdentityKey = Object_keypair(
+	ProScript_crypto_random32Bytes(string_tl1),
+	ProScript_crypto_ED25519_publicKey(ProScript_crypto_random32Bytes(string_tl1))
+) in
+let bobIdentityKey = Object_keypair(
+	ProScript_crypto_random32Bytes(string_tl2),
+	ProScript_crypto_ED25519_publicKey(ProScript_crypto_random32Bytes(string_tl2))
+) in
+let malloryIdentityKey = Object_keypair(
+	ProScript_crypto_random32Bytes(string_tl3),
+	ProScript_crypto_ED25519_publicKey(ProScript_crypto_random32Bytes(string_tl3))
+) in
+
+let aliceSignedPreKey   = fun_newKeyPair(string_tl4) in
+let alicePreKey         = fun_newKeyPair(string_tl5) in
+let bobSignedPreKey     = fun_newKeyPair(string_tl6) in
+let bobPreKey           = fun_newKeyPair(string_tl7) in
+let mallorySignedPreKey = fun_newKeyPair(string_tl8) in
+let malloryPreKey       = fun_newKeyPair(string_tl9) in
+
+(
+	Responder(
+		bobIdentityKey,
+		bobSignedPreKey,
+		bobPreKey,
+		Object_keypair_get_pub(aliceIdentityKey),
+		fun_getDHPublicKey(Object_keypair_get_priv(aliceIdentityKey))
+	)
+)

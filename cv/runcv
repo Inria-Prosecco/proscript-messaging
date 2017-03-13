@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Please update the next two lines to correspond to the location
+# of a timing program and of CryptoVerif on your computer.
+
+TIME=$HOME/dev/cryptoverif/xtime
+CV="$HOME/dev/cryptoverif/cryptoverif -lib TextSecure"
+
+# The argument of analyze is
+# $1 = file name (without .cv)
+
+function analyze()
+{
+echo $1
+$TIME $CV $1.cv > $1.out
+tail -n 2 $1.out
+}
+
+for prot in NO_REPLAY_PROT REPLAY_PROT
+do
+
+for sessions in AB-BA AA
+do
+for prop in STD FS
+do
+m4 -D$prop -D$prot TextSecure-$sessions.m4.cv > TextSecure-$sessions.$prop.$prot.cv
+analyze TextSecure-$sessions.$prop.$prot
+done
+done
+
+m4 -D$prot TextSecure-KCI.m4.cv > TextSecure-KCI.$prot.cv
+analyze TextSecure-KCI.$prot
+
+done

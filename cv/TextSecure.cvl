@@ -1,0 +1,727 @@
+forall x:bool; not(not(x)) = x.
+forall x:bool,y:bool; (not(x && y)) = (not(x) || not(y)).
+forall x:bool,y:bool; (not(x || y)) = (not(x) && not(y)).
+forall ; not(true) = false.
+forall ; not(false) = true.
+
+const bottom:bitstringbot.
+
+(* UF-CMA signatures *)
+
+define UF_CMA_signature(keyseed, pkey, skey, signinput, signature, seed, skgen, pkgen, sign, check, Psign, Psigncoll) {
+
+param N, N2, N3, N4.
+
+const mark: bitstring.
+
+fun sign(signinput, skey, seed): signature.
+fun skgen(keyseed):skey.
+fun pkgen(keyseed):pkey.
+fun check(signinput, pkey, signature): bool.
+
+fun sign2(signinput, skey, seed): signature.
+fun skgen2(keyseed):skey.
+fun pkgen2(keyseed):pkey.
+fun check2(signinput, pkey, signature): bool.
+
+forall m:signinput, r:keyseed, r2:seed; 
+	check(m, pkgen(r), sign(m, skgen(r), r2)) = true.
+forall m:signinput, r:keyseed, r2:seed; 
+	check2(m, pkgen2(r), sign2(m, skgen2(r), r2)) = true.
+
+equiv uf_cma(sign)
+       !N3 new r: keyseed; (Opk() [2] := pkgen(r),
+			    !N2 new r2: seed; Osign(x: signinput) := sign(x, skgen(r), r2),
+			    !N Ocheck(m1: signinput, si1:signature) := check(m1, pkgen(r), si1)),
+       !N4 Ocheck2(m: signinput, y: pkey, si: signature) [3] := check(m, y, si) [all]
+     <=(N3 * Psign(time + (N4+N-1) * time(check, max(maxlength(m1), maxlength(m)), max(maxlength(si1), maxlength(si))) + (N3-1)*(time(pkgen) + time(skgen) + N2 * time(sign, maxlength(x)) + N * time(check, maxlength(m1), maxlength(si1))), N2, maxlength(x)))=> [computational]
+       !N3 new r: keyseed [unchanged]; 
+       	       	  	   (Opk() := pkgen2(r),
+			    !N2 new r2: seed [unchanged]; Osign(x: signinput) := sign2(x, skgen2(r), r2),
+			    !N Ocheck(m1: signinput, si1:signature) :=
+                              find j <= N2 suchthat defined(x[j]) && m1 = x[j] && check2(m1, pkgen2(r), si1) then true else false),
+       !N4 Ocheck2(m: signinput, y: pkey, si: signature) :=
+		find j <= N2, k <= N3 suchthat defined(x[j,k],r[k]) && y = pkgen2(r[k]) && m = x[j,k] && check2(m, y, si) then true else
+		find k <= N3 suchthat defined(r[k]) && y = pkgen2(r[k]) then false else
+		check(m,y,si).
+
+equiv uf_cma_corrupt(sign)
+       !N3 new r: keyseed; (Opk() [useful_change] [2] := pkgen(r),
+			    !N2 new r2: seed; Osign(x: signinput) [useful_change] := sign(x, skgen(r), r2),
+			    !N Ocheck(m1: signinput, si1:signature) [useful_change] := check(m1, pkgen(r), si1),
+			    Ocorrupt() [10] := r),
+       !N4 Ocheck2(m: signinput, y: pkey, si: signature) [3] := check(m, y, si) [all]
+     <=(N3 * Psign(time + (N4+N-1) * time(check, max(maxlength(m1), maxlength(m)), max(maxlength(si1), maxlength(si))) + (N3-1)*(time(pkgen) + time(skgen) + N2 * time(sign, maxlength(x)) + N * time(check, maxlength(m1), maxlength(si1))), N2, maxlength(x)))=> [manual,computational]
+       !N3 new r: keyseed [unchanged]; 
+       	       	  	   (Opk() := pkgen2(r),
+			    !N2 new r2: seed [unchanged]; Osign(x: signinput) := sign2(x, skgen2(r), r2),
+			    !N Ocheck(m1: signinput, si1:signature) :=
+			      if defined(corrupt) then check2(m1, pkgen2(r), si1) else
+                              find j <= N2 suchthat defined(x[j]) && m1 = x[j] && check2(m1, pkgen2(r), si1) then true else false,
+			    Ocorrupt() := let corrupt: bitstring = mark in r),
+       !N4 Ocheck2(m: signinput, y: pkey, si: signature) :=
+		find k <= N3 suchthat defined(r[k],corrupt[k]) && y = pkgen2(r[k]) then check2(m, y, si) else
+		find j <= N2, k <= N3 suchthat defined(x[j,k],r[k]) && y = pkgen2(r[k]) && m = x[j,k] && check2(m, y, si) then true else
+		find k <= N3 suchthat defined(r[k]) && y = pkgen2(r[k]) then false else
+		check(m,y,si).
+
+collision new r1:keyseed; new r2:keyseed; 
+	pkgen(r1) = pkgen(r2) <=(Psigncoll)=> false.
+collision new r1:keyseed; new r2:keyseed; 
+	pkgen(r1) = pkgen2(r2) <=(Psigncoll)=> false.
+collision new r1:keyseed; new r2:keyseed; 
+	pkgen2(r1) = pkgen2(r2) <=(Psigncoll)=> false.
+collision new r1:keyseed; new r2:keyseed; 
+	skgen(r1) = skgen(r2) <=(Psigncoll)=> false.
+collision new r1:keyseed; new r2:keyseed; 
+	skgen(r1) = skgen2(r2) <=(Psigncoll)=> false.
+collision new r1:keyseed; new r2:keyseed; 
+	skgen2(r1) = skgen2(r2) <=(Psigncoll)=> false.
+
+}
+
+(* Gap Diffie-Hellman *)
+
+define GDH_prime_order(G, Z, g, exp, mult, pGDH) {
+
+fun exp(G,Z): G.
+fun exp'(G,Z): G.
+const g:G.
+
+fun mult(Z,Z): Z. 
+equation commut(mult).
+
+(* exponents multiply *)
+
+forall a:G, x:Z, y:Z;
+  exp(exp(a,x), y) = exp(a, mult(x,y)).
+forall a:G, x:Z, y:Z;
+  exp'(exp'(a,x), y) = exp'(a, mult(x,y)).
+
+(* injectivity *)
+
+forall x:Z, y:Z; (exp(g,x) = exp(g,y)) = (x = y).
+forall x:Z, y:Z; (exp'(g,x) = exp'(g,y)) = (x = y).
+
+(* According to http://link.springer.com/chapter/10.1007%2F11745853_14,
+page 214, the order of the base point is a prime
+namely 2^252 + 27742317777372353535851937790883648493.
+So exp(x,y) = exp(x',y) implies y = y' (provided y is not a multiple
+of this prime; if y is a correctly generated secret key, that cannot
+happen) *)
+
+forall x:G, x':G, y:Z; (exp(x,y) = exp(x',y)) = (x = x').
+forall x:G, x':Z, y:Z; (exp(x,y) = exp(g, mult(x',y))) = (x = exp(g,x')).
+
+forall x:G, y:Z, y':Z; (exp(x,y) = exp(x,y')) = (y = y').
+
+(* collision between products *)
+
+collision new x1:Z; new x2:Z; new x3:Z; new x4:Z; 
+  mult(x1,x2) = mult(x3,x4) <=(1/|Z|)=> false. 
+
+collision new x1:Z; new x2:Z; 
+  mult(x1,x1) = mult(x2,x2) <=(1/|Z|)=> false. 
+
+forall x:Z, y:Z, y':Z; 
+  (mult(x,y) = mult(x,y')) = (y = y').
+
+(* replace a random group element with an exponentiation, and conversely *)
+
+param N, N'.
+
+equiv group_to_exp_strict(exp)
+      !N new X:G; (OX() := X, !N' OXm(m:Z) [useful_change] := exp(X,m))
+<=(0)=> [computational]
+      !N new x:Z; (OX() := exp(g,x), !N' OXm(m:Z) := exp(g,mult(x,m))).
+
+(* This equivalence is very general, apply it only manually, because
+   otherwise it might be applied too often.  The equivalence above is
+   particular case applied only when X is inside exp, and good for
+   automatic proofs. *)
+
+equiv group_to_exp(exp)
+      !N new X:G; OX() := X 
+<=(0)=> [manual, computational]    
+      !N new x:Z; OX() := exp(g,x).
+
+
+equiv exp_to_group(exp)
+      !N new x:Z; OX() := exp(g,x)
+<=(0)=> [computational]
+      !N new X:G; OX() := X.
+
+equiv exp'_to_group(exp)
+      !N new x:Z; OX() := exp'(g,x)
+<=(0)=> [computational]
+      !N new X:G; OX() := X.
+
+(* the GDH assumption
+    This equivalence says that, when exp(g,a[i]) and exp(g,b[j]) are known to the
+    adversary, the adversary can compute exp(g, mult(a[i], b[j])) only with
+    negligible probability, even in the presence of a DDH oracle
+    DDH(G,A,B,C) tells whether A = G^a, B = G^b, and C = G^{ab} for some a,b,
+    that is DDH(G,A,B,C) is (log_G(A) * log_G(B) = log_G(C)). *) 
+
+const mark: bitstring.
+
+param na, naDDH, naDDH1, naDDH2, naDDH3, naDDH4, naDDH5, naDDH6, naDDH7, naDDH8,
+      nb, nbDDH, nbDDH1, nbDDH2, nbDDH3, nbDDH4, nbDDH5, nbDDH6, nbDDH7, nbDDH8.
+
+equiv gdh(exp)
+    !na new a:Z; (
+      OA() := exp(g,a), 
+      Oa() [3] := a,
+      !naDDH1 ODDHa1(m:G, m':G) := m = exp(m', a),
+      !naDDH2 ODDHa2(m:G,m':G,j<=nb) := exp(m, b[j]) = exp(m',a),
+      !naDDH3 ODDHa3(m:G,m':G,j<=na) := exp(m, a[j]) = exp(m',a),
+      !naDDH4 ODDHa4(m:G,j'<=nb,j<=nb) := exp(m, b[j]) = exp(g,mult(b[j'],a)),
+      !naDDH5 ODDHa5(m:G,j'<=nb,j<=na) := exp(m, a[j]) = exp(g,mult(b[j'],a)),
+      !naDDH6 ODDHa6(m:G,j'<=na,j<=nb) := exp(m, b[j]) = exp(g,mult(a[j'],a)),
+      !naDDH7 ODDHa7(m:G,j'<=na,j<=na) := exp(m, a[j]) = exp(g,mult(a[j'],a)),
+      !naDDH ODDHa(m:G, j<=nb) [useful_change] := m = exp(g, mult(b[j], a)),
+      !naDDH8 ODDHa8(m:G,j<=na) [3] := m = exp(g,mult(a[j], a))
+    ),
+    !nb new b:Z; (
+      OB() := exp(g,b),
+      Ob() [3] := b,
+      !nbDDH1 ODDHb1(m:G, m':G) := m = exp(m', b),
+      !nbDDH2 ODDHb2(m:G,m':G,j<=nb) := exp(m, b[j]) = exp(m',b),
+      !nbDDH3 ODDHb3(m:G,m':G,j<=na) := exp(m, a[j]) = exp(m',b),
+      !nbDDH4 ODDHb4(m:G,j'<=nb,j<=nb) := exp(m, b[j]) = exp(g,mult(b[j'],b)),
+      !nbDDH5 ODDHb5(m:G,j'<=nb,j<=na) := exp(m, a[j]) = exp(g,mult(b[j'],b)),
+      !nbDDH6 ODDHb6(m:G,j'<=na,j<=nb) := exp(m, b[j]) = exp(g,mult(a[j'],b)),
+      !nbDDH7 ODDHb7(m:G,j'<=na,j<=na) := exp(m, a[j]) = exp(g,mult(a[j'],b)),
+      !nbDDH ODDHb(m:G, j<=na) := m = exp(g, mult(a[j], b)),
+      !nbDDH8 ODDHb8(m:G,j<=nb) [3] := m = exp(g,mult(b[j], b))
+    )
+<=((#ODDHa + #ODDHa1 + #ODDHa4 + #ODDHa5 + #ODDHb + #ODDHb1 + #ODDHb6 + #ODDHb7) *
+	   max(1, 7.4*#Oa) * max(1, 7.4*#Ob) *
+	   pGDH(time + (na + nb + #ODDHa + #ODDHa1 + #ODDHb + #ODDHb1) * time(exp),
+	   #ODDHa1 + #ODDHa2 + #ODDHa3 + #ODDHa4 + #ODDHa5 + #ODDHa6 + #ODDHa7 + #ODDHa8 +
+	   #ODDHb1 + #ODDHb2 + #ODDHb3 + #ODDHb4 + #ODDHb5 + #ODDHb6 + #ODDHb7 + #ODDHb8))=> [computational]
+    !na new a:Z [unchanged]; (
+      OA() := exp'(g,a), 
+      Oa() := let ka:bitstring = mark in a,
+      !naDDH1 ODDHa1(m:G, m':G) := if defined(ka) then m = exp'(m', a) else 
+      		  	   find u<=nb suchthat defined(b[u],kb[u]) && m' = exp'(g,b[u]) then m = exp'(m', a) else
+			   find u<=nb suchthat defined(b[u]) && m' = exp'(g,b[u]) then false else
+                               (* by CDH, if neither a nor b[u] are leaked, then m = exp(g, b[u]*a) is impossible *)
+			   m = exp'(m', a)
+			       (* GDH allows to compute m = exp(m',a) for any m and m', without leaking a, 
+			          as it is DDH(g, exp(g,a), m', m) *),
+      !naDDH2 ODDHa2(m:G,m':G,j<=nb) := exp'(m, b[j]) = exp'(m',a),
+      	   (* GDH allows to compute exp(m, b[j]) = exp(m',a) for any m and m', 
+	      without leaking a, as it is DDH(exp(g,a), exp(g,b[j]), m, m')
+	      Indeed, 
+ 	      D(exp(g,a),exp(g,b[j]),m,m') 
+      	        = (log_{g^a}(g^b[j]) * log_{g^a}(m) = log_{g^a}(m'))
+      		= (b[j]/a * log_g(m)/a = log_g(m')/a)
+      		= (b[j] * log_g(m) = a log_g(m'))
+      		= (m^b[j] = m'^a). *)
+      !naDDH3 ODDHa3(m:G,m':G,j<=na) := exp'(m, a[j]) = exp'(m',a),
+      	    (* Similar to ODDHa2 *)
+      !naDDH4 ODDHa4(m:G,j'<=nb,j<=nb) :=
+      	      find u<=nb suchthat defined(kb[u],b[u]) && b[j'] = b[u] then exp'(m, b[j]) = exp'(g,mult(b[j'],a)) else
+	      if defined(ka) then exp'(m, b[j]) = exp'(g,mult(b[j'],a)) else
+      	      b[j] = b[j'] && m = exp'(g,a),
+      !naDDH5 ODDHa5(m:G,j'<=nb,j<=na) :=
+      	      find u<=nb suchthat defined(kb[u],b[u]) && b[j'] = b[u] then exp'(m, a[j]) = exp'(g,mult(b[j'],a)) else
+	      if defined(ka) then exp'(m, a[j]) = exp'(g,mult(b[j'],a)) else
+      	      a[j] = a && m = exp'(g,b[j']),
+      !naDDH6 ODDHa6(m:G,j'<=na,j<=nb) := exp'(m, b[j]) = exp'(g,mult(a[j'],a)),
+      !naDDH7 ODDHa7(m:G,j'<=na,j<=na) := exp'(m, a[j]) = exp'(g,mult(a[j'],a)),
+            (* ODDHa4..7 are particular cases of ODDHa2 or ODDHa3, with m' = exp(g, b[j'])
+	       or m' = exp(g, a[j']).
+	       We need to consider all these forms because CryptoVerif rewrites
+	       exp(exp(g,b[j']),a) into exp(g,mult(b[j'],a)), and it would not
+	       detect exp(g,mult(b[j'],a)) as an instance of exp(m',a). *)
+      !naDDH ODDHa(m:G, j<=nb) :=
+      	     find u<=nb suchthat defined(kb[u],b[u]) && b[j] = b[u] then m = exp'(g, mult(b[j], a)) else 
+             if defined(ka) then m = exp'(g, mult(b[j], a)) else false,
+	    (* ODDHa is a particular case of ODDHa1 in which can apply the CDH assumption,
+	       provided a and b[j] are not leaked. *)
+      !naDDH8 ODDHa8(m:G,j<=na) := m = exp'(g,mult(a[j], a))
+            (* ODDHa8 is a particular case of ODDHa1 in which we do not apply
+	       the CDH assumption, since we apply it between a's and b's *)
+    ),
+    !nb new b:Z [unchanged]; (
+      OB() := exp'(g,b), 
+      Ob() := let kb:bitstring = mark in b,
+      !nbDDH1 ODDHb1(m:G, m':G) := if defined(kb) then m = exp'(m', b) else 
+      		  	   find u<=na suchthat defined(a[u],ka[u]) && m' = exp'(g,a[u]) then m = exp'(m', b) else
+      		  	   find u<=na suchthat defined(a[u]) && m' = exp'(g,a[u]) then false else
+                               (* by CDH, if neither a nor b[u] are leaked, then m = exp(g, a[u]*b) is impossible *)
+			   m = exp'(m', b)
+			       (* GDH allows to compute m = exp(m',a) for any m and m', without leaking a *),
+      !nbDDH2 ODDHb2(m:G,m':G,j<=nb) := exp'(m, b[j]) = exp'(m',b),
+      !nbDDH3 ODDHb3(m:G,m':G,j<=na) := exp'(m, a[j]) = exp'(m',b),
+      !nbDDH4 ODDHb4(m:G,j'<=nb,j<=nb) := exp'(m, b[j]) = exp'(g,mult(b[j'],b)),
+      !nbDDH5 ODDHb5(m:G,j'<=nb,j<=na) := exp'(m, a[j]) = exp'(g,mult(b[j'],b)),
+      !nbDDH6 ODDHb6(m:G,j'<=na,j<=nb) :=
+      	      find u<=na suchthat defined(ka[u],a[u]) && a[j'] = a[u] then exp'(m, b[j]) = exp'(g,mult(a[j'],b)) else
+	      if defined(kb) then exp'(m, b[j]) = exp'(g,mult(a[j'],b)) else
+      	      b[j] = b && m = exp'(g,a[j']),
+      !nbDDH7 ODDHb7(m:G,j'<=na,j<=na) :=
+      	      find u<=na suchthat defined(ka[u],a[u]) && a[j'] = a[u] then exp'(m, a[j]) = exp'(g,mult(a[j'],b)) else
+	      if defined(kb) then exp'(m, a[j]) = exp'(g,mult(a[j'],b)) else
+      	      a[j] = a[j'] && m = exp'(g,b),
+      !nbDDH ODDHb(m:G, j<=na) := find u<=na suchthat defined(ka[u],a[u]) && a[j] = a[u] then m = exp'(g, mult(a[j], b)) else 
+                            if defined(kb) then m = exp'(g, mult(a[j], b)) else false,
+      !nbDDH8 ODDHb8(m:G,j<=nb) := m = exp'(g,mult(b[j], b))
+    ).
+
+    (* We need to consider both forms m = exp(m', a) and m = exp(g,
+    mult(b[j], a)) in the equivalence, because, when m' is known to be
+    exp(g, b[j]), CryptoVerif is going to simplify m = exp(m', a) into
+    m = exp(g, mult(b[j], a)), and the procedure that tests whether a
+    term in the game matches a term in the equivalence would not
+    recognize that m = exp(g, mult(b[j], a)) in the game matches m =
+    exp(m', a) in the equivalence. *)
+
+}
+
+(* Square gap Diffie-Hellman *)
+
+define square_GDH(G, Z, g, exp, mult, pGDH) {
+
+fun exp(G,Z): G.
+fun exp'(G,Z): G.
+const g:G.
+
+fun mult(Z,Z): Z. 
+equation commut(mult).
+
+(* exponents multiply *)
+
+forall a:G, x:Z, y:Z;
+  exp(exp(a,x), y) = exp(a, mult(x,y)).
+forall a:G, x:Z, y:Z;
+  exp'(exp'(a,x), y) = exp'(a, mult(x,y)).
+
+(* injectivity *)
+
+forall x:Z, y:Z; (exp(g,x) = exp(g,y)) = (x = y).
+forall x:Z, y:Z; (exp'(g,x) = exp'(g,y)) = (x = y).
+
+(* According to http://link.springer.com/chapter/10.1007%2F11745853_14,
+page 214, the order of the base point is a prime
+namely 2^252 + 27742317777372353535851937790883648493.
+So exp(x,y) = exp(x',y) implies y = y' (provided y is not a multiple
+of this prime; if y is a correctly generated secret key, that cannot
+happen) *)
+
+forall x:G, x':G, y:Z; (exp(x,y) = exp(x',y)) = (x = x').
+forall x:G, x':Z, y:Z; (exp(x,y) = exp(g, mult(x',y))) = (x = exp(g,x')).
+
+(* Stronger assumption, assumes prime order group,
+   and z is really a group element. *)
+
+forall z:G, x:Z, y:Z; (exp(z,x) = exp(z,y)) = (x = y).
+forall z:G, x:Z, y:Z; (exp'(z,x) = exp'(z,y)) = (x = y).
+
+(* collision between products *)
+
+collision new x1:Z; new x2:Z; new x3:Z; new x4:Z; 
+  mult(x1,x2) = mult(x3,x4) <=(1/|Z|)=> false. 
+
+collision new x1:Z; new x2:Z; 
+  mult(x1,x1) = mult(x2,x2) <=(1/|Z|)=> false. 
+
+forall x:Z, y:Z, y':Z; 
+  (mult(x,y) = mult(x,y')) = (y = y').
+
+(* replace a random group element with an exponentiation, and conversely *)
+
+param N, N'.
+
+equiv group_to_exp_strict(exp)
+      !N new X:G; (OX() := X, !N' OXm(m:Z) [useful_change] := exp(X,m))
+<=(0)=> [computational]
+      !N new x:Z; (OX() := exp(g,x), !N' OXm(m:Z) := exp(g,mult(x,m))).
+
+(* This equivalence is very general, apply it only manually, because
+   otherwise it might be applied too often.  The equivalence above is
+   particular case applied only when X is inside exp, and good for
+   automatic proofs. *)
+
+equiv group_to_exp(exp)
+      !N new X:G; OX() := X 
+<=(0)=> [manual, computational]    
+      !N new x:Z; OX() := exp(g,x).
+
+
+equiv exp_to_group(exp)
+      !N new x:Z; OX() := exp(g,x)
+<=(0)=> [computational]
+      !N new X:G; OX() := X.
+
+equiv exp'_to_group(exp)
+      !N new x:Z; OX() := exp'(g,x)
+<=(0)=> [computational]
+      !N new X:G; OX() := X.
+
+(* the square GDH assumption
+    This equivalence says that, when exp(g,a[i]) and exp(g,a[j]) are known to the
+    adversary, the adversary can compute exp(g, mult(a[i], a[j])) only with
+    negligible probability, even in the presence of a DDH oracle
+    DDH(G,A,B,C) tells whether A = G^a, B = G^b, and C = G^{ab} for some a,b,
+    that is DDH(G,A,B,C) is (log_G(A) * log_G(B) = log_G(C)).
+    The indices i and j are allowed to be equal, and in that case, 
+    the adversary cannot compute exp(g, mult(a[i], a[i])) from exp(g,a[i]). *) 
+
+const mark: bitstring.
+
+param na, naDDH, naDDH1, naDDH2, naDDH3.
+
+equiv square_gdh(exp)
+    !na new a:Z; (
+      OA() := exp(g,a), 
+      Oa() [3] := a,
+      !naDDH1 ODDHa1(m:G, m':G) := m = exp(m', a),
+      !naDDH2 ODDHa2(m:G,m':G,j<=na) := exp(m, a[j]) = exp(m',a),
+      !naDDH3 ODDHa3(m:G,j'<=na,j<=na) := exp(m, a[j]) = exp(g,mult(a[j'],a)),
+      !naDDH ODDHa(m:G, j<=na) [useful_change] := m = exp(g, mult(a[j], a))
+    )
+<=((#ODDHa + #ODDHa1) * max(1, 7.4*#Oa) * max(1, 7.4*#Oa) *
+	   pGDH(time + (na + #ODDHa + #ODDHa1) * time(exp),
+	   #ODDHa1 + #ODDHa2 + #ODDHa3))=> [computational]
+(* TO DO probability to check *)
+    !na new a:Z [unchanged]; (
+      OA() := exp'(g,a), 
+      Oa() := let ka:bitstring = mark in a,
+      !naDDH1 ODDHa1(m:G, m':G) := if defined(ka) then m = exp'(m', a) else 
+      		  	   find u<=na suchthat defined(a[u],ka[u]) && m' = exp'(g,a[u]) then m = exp'(m', a) else
+			   find u<=na suchthat defined(a[u]) && m' = exp'(g,a[u]) then false else
+                               (* by (square) CDH, if neither a nor a[u] are leaked, then m = exp(g, a[u]*a) is impossible *)
+			   m = exp'(m', a)
+			       (* GDH allows to compute m = exp(m',a) for any m and m', without leaking a, 
+			          as it is DDH(g, exp(g,a), m', m) *),
+      !naDDH2 ODDHa2(m:G,m':G,j<=na) := exp'(m, a[j]) = exp'(m',a),
+      !naDDH3 ODDHa3(m:G,j'<=na,j<=na) := exp'(m, a[j]) = exp'(g,mult(a[j'],a)),
+      !naDDH ODDHa(m:G, j<=na) :=
+      	     find u<=na suchthat defined(ka[u],a[u]) && a[j] = a[u] then m = exp'(g, mult(a[j], a)) else 
+             if defined(ka) then m = exp'(g, mult(a[j], a)) else false
+	    (* ODDHa is a particular case of ODDHa1 in which can apply the (square) CDH assumption,
+	       provided a and a[j] are not leaked. *)
+    ).
+
+    (* We need to consider both forms m = exp(m', a) and m = exp(g,
+    mult(a[j], a)) in the equivalence, because, when m' is known to be
+    exp(g, a[j]), CryptoVerif is going to simplify m = exp(m', a) into
+    m = exp(g, mult(a[j], a)), and the procedure that tests whether a
+    term in the game matches a term in the equivalence would not
+    recognize that m = exp(g, mult(a[j], a)) in the game matches m =
+    exp(m', a) in the equivalence. *)
+
+}
+
+(* Key derivation functions: Random oracles *)
+
+define ROM_hash(key, hashinput, hashoutput, hash (*, hashoracle, qH*)) {
+
+param Nh, N, Neq.
+
+fun hash(key, hashinput):hashoutput.
+
+equiv rom(hash)
+      !Nh new k:key;
+      	  (!N Ohash(x:hashinput) := hash(k,x),
+      	   !Neq Oeq(x':hashinput, r':hashoutput) := r' = hash(k,x'))
+      <=(#Oeq / |hashoutput|)=> [computational]
+      !Nh (!N Ohash(x:hashinput) := 
+              find[unique] j <= N suchthat defined(x[j],r[j]) && x = x[j] then r[j] else
+	      new r:hashoutput; r,
+      	   !Neq Oeq(x':hashinput, r':hashoutput) := 
+              find[unique] j <= N suchthat defined(x[j],r[j]) && x' = x[j] then r' = r[j] else
+	      false).
+
+}
+
+define ROM_hash_pair(key, hashinput1, hashinput2, hashoutput, hash) {
+
+param Nh, N, Neq.
+
+fun hash(key, hashinput1, hashinput2):hashoutput.
+
+equiv rom(hash)
+      !Nh new k:key;
+      	  (!N Ohash(x1:hashinput1, x2:hashinput2) := hash(k,x1,x2),
+      	   !Neq Oeq(x1':hashinput1, x2':hashinput2, r':hashoutput) := 
+	       r' = hash(k,x1',x2'))
+      <=(#Oeq / |hashoutput|)=> [computational]
+      !Nh (!N Ohash(x1:hashinput1, x2:hashinput2) := 
+              find[unique] j <= N suchthat defined(x1[j],x2[j],r[j]) && x1 = x1[j] && x2 = x2[j] then r[j] else
+	      new r:hashoutput; r,
+      	   !Neq Oeq(x1':hashinput1, x2':hashinput2, r':hashoutput) := 
+              find[unique] j <= N suchthat defined(x1[j],x2[j],r[j]) && x1' = x1[j] && x2' = x2[j] then r' = r[j] else
+	      false).
+
+}
+
+define ROM_hash_triple(key, hashinput1, hashinput2, hashinput3, hashoutput, hash) {
+
+param Nh, N, Neq.
+
+fun hash(key, hashinput1, hashinput2, hashinput3):hashoutput.
+
+equiv rom(hash)
+      !Nh new k:key;
+      	  (!N Ohash(x1:hashinput1, x2:hashinput2, x3: hashinput3) := hash(k,x1,x2,x3),
+      	   !Neq Oeq(x1':hashinput1, x2':hashinput2, x3': hashinput3, r':hashoutput) := 
+	       r' = hash(k,x1',x2',x3'))
+      <=(#Oeq / |hashoutput|)=> [computational]
+      !Nh (!N Ohash(x1:hashinput1, x2:hashinput2, x3: hashinput3) := 
+              find[unique] j <= N suchthat defined(x1[j],x2[j],x3[j],r[j]) && x1 = x1[j] && x2 = x2[j] && x3 = x3[j] then r[j] else
+	      new r:hashoutput; r,
+      	   !Neq Oeq(x1':hashinput1, x2':hashinput2, x3': hashinput3, r':hashoutput) := 
+              find[unique] j <= N suchthat defined(x1[j],x2[j],x3[j],r[j]) && x1' = x1[j] && x2' = x2[j] && x3' = x3[j] then r' = r[j] else
+	      false).
+
+}
+
+define ROM_hash_quad(key, hashinput1, hashinput2, hashinput3, hashinput4, hashoutput, hash) {
+
+param Nh, N, Neq.
+
+fun hash(key, hashinput1, hashinput2, hashinput3, hashinput4):hashoutput.
+
+equiv rom(hash)
+      !Nh new k:key;
+      	  (!N Ohash(x1:hashinput1, x2:hashinput2, x3: hashinput3, x4: hashinput4) := hash(k,x1,x2,x3,x4),
+      	   !Neq Oeq(x1':hashinput1, x2':hashinput2, x3': hashinput3, x4':hashinput4, r':hashoutput) := 
+	       r' = hash(k,x1',x2',x3',x4'))
+      <=(#Oeq / |hashoutput|)=> [computational]
+      !Nh (!N Ohash(x1:hashinput1, x2:hashinput2, x3: hashinput3, x4:hashinput4) := 
+              find[unique] j <= N suchthat defined(x1[j],x2[j],x3[j],x4[j],r[j]) && x1 = x1[j] && x2 = x2[j] && x3 = x3[j] && x4 = x4[j] then r[j] else
+	      new r:hashoutput; r,
+      	   !Neq Oeq(x1':hashinput1, x2':hashinput2, x3': hashinput3, x4': hashinput4, r':hashoutput) := 
+              find[unique] j <= N suchthat defined(x1[j],x2[j],x3[j],x4[j],r[j]) && x1' = x1[j] && x2' = x2[j] && x3' = x3[j] && x4' = x4[j] then r' = r[j] else
+	      false).
+
+}
+
+(* MAC *)
+
+define SUF_CMA_mac_nokgen(mkey, macinput, macres, mac, check, Pmac) {
+
+param N, N2, N3.
+
+const mark: bitstring.
+
+fun mac(macinput, mkey):macres.
+fun check(macinput, mkey, macres): bool.
+
+fun mac2(macinput, mkey):macres.
+
+forall m:macinput, k:mkey;
+	check(m, k, mac(m, k)).
+
+equiv suf_cma(mac)
+      ! N3 new k: mkey;(
+	 !N Omac(x: macinput) := mac(x, k),
+	 !N2 Ocheck(m: macinput, ma: macres) := check(m, k, ma))
+     <=(N3 * Pmac(time + (N3-1)*(N*time(mac,maxlength(x)) + N2*time(check,maxlength(m),maxlength(ma))), N, N2, max(maxlength(x), maxlength(m))))=> [computational]
+      ! N3 new k: mkey [unchanged];(
+	 !N Omac(x: macinput) := let ma2:macres = mac2(x, k) in ma2,
+	 !N2 Ocheck(m: macinput, ma: macres) := 
+	    find j <= N suchthat defined(x[j], ma2[j]) && (m = x[j]) && (ma = ma2[j]) then true else false).
+
+equiv suf_cma_corrupt(mac) 
+      ! N3 new k: mkey;(
+	 !N Omac(x: macinput) [useful_change] := mac(x, k),
+	 !N2 Ocheck(m: macinput, ma: macres) [useful_change] := check(m, k, ma),
+	 Ocorrupt() [10] := k)
+     <=(N3 * Pmac(time + (N3-1)*(N*time(mac,maxlength(x)) + N2*time(check,maxlength(m),maxlength(ma))), N, N2, max(maxlength(x), maxlength(m))))=> [manual,computational]
+      ! N3 new k: mkey [unchanged];(
+	 !N Omac(x: macinput) := let ma2:macres = mac2(x, k) in ma2,
+	 !N2 Ocheck(m: macinput, ma: macres) := 
+	    if defined(corrupt) then check(m, k, ma) else
+	    find j <= N suchthat defined(x[j], ma2[j]) && (m = x[j]) && ma = ma2[j] then true else false,
+	 Ocorrupt() := let corrupt: bitstring = mark in k).
+
+}
+
+(* PRF without key generation *)
+
+define PRF_no_kgen(key, input, output, f, Pprf) {
+
+param N, N2, N3.
+
+fun f(key, input): output.
+
+equiv prf(f)
+       !N3 new k: key; !N Of(x:input) := f(k, x)
+     <=(N3 * Pprf(time + (N3-1)*(N * time(f, maxlength(x))), N, maxlength(x)))=>
+       !N3 !N Of(x:input) :=
+		find[unique] j<=N suchthat defined(x[j],r2[j]) && x = x[j] then r2[j] 
+		else new r2: output; r2.
+
+}
+
+(* Encryption in CBC mode *)
+
+define CBC_enc(key, cleartext, ciphertext, t_IV, enc, dec, Zero, Penc) { 
+
+param N, N2.
+
+fun enc(key, t_IV, cleartext): ciphertext.
+fun dec(key, ciphertext): cleartext.
+
+forall k: key, IV: t_IV, msg: cleartext;
+      dec(k, enc(k, IV, msg)) = msg.
+
+(* encryption is IND-CPA *)
+
+(* Zero(x) is a cleartext of the same length as x, containing only zeroes *)
+fun Zero(cleartext): cleartext.
+
+fun enc'(key, t_IV, cleartext): ciphertext.
+
+equiv ind_cpa(enc)
+      !N2 new k: key; !N new IV: t_IV; Oenc(msg: cleartext) := enc(k, IV, msg)
+<=(N2 * Penc(time + (N2-1)*(N*time(enc, maxlength(msg)) + N*time(Zero, maxlength(msg))), N, maxlength(msg)))=>
+      !N2 new k: key; !N new IV: t_IV; Oenc(msg: cleartext) := enc'(k, IV, Zero(msg)).
+
+}
+
+(* AEAD scheme, such as AES-GCM *)
+
+define AEAD(key, cleartext, ciphertext, t_IV, t_data, enc, dec, injbot, Zero, Penc, Pencctxt) { 
+
+param N, N2, N3.
+
+fun enc(key, t_IV, cleartext, t_data): ciphertext.
+fun dec(key, t_IV, ciphertext, t_data): bitstringbot.
+
+fun injbot(cleartext):bitstringbot [compos].
+forall x:cleartext; injbot(x) <> bottom.
+
+forall k: key, IV: t_IV, msg: cleartext, data: t_data;
+      dec(k, IV, enc(k, IV, msg, data), data) = injbot(msg).
+
+(* Event raised when some IV is used several times
+   with the same key, which breaks security. *)
+event repeated_IV.
+
+(* encryption is IND-CPA *)
+
+(* Zero(x) is a cleartext of the same length as x, containing only zeroes *)
+fun Zero(cleartext): cleartext.
+
+fun enc'(key, t_IV, cleartext, t_data): ciphertext.
+
+equiv ind_cpa(enc)
+      !N2 new k: key; !N Oenc(IV: t_IV, msg: cleartext, data: t_data) := enc(k, IV, msg, data)
+<=(N2 * Penc(time + (N2-1)*(N*time(enc, maxlength(msg), maxlength(data)) + N*time(Zero, maxlength(msg))), N, maxlength(msg)))=>
+      !N2 new k: key; !N Oenc(IV: t_IV, msg: cleartext, data: t_data) := 
+      	      find i <= N suchthat defined(IV[i],r[i]) && IV = IV[i] then
+	          event_abort repeated_IV
+	      else
+		  let r: ciphertext = enc'(k, IV, Zero(msg), data) in
+		  r.
+
+(* encryption protects against forgeries *)
+
+equiv int_ctxt(enc)
+      ! N2 new k: key; (!N Oenc(IV: t_IV, msg: cleartext, data: t_data) := enc(k, IV, msg, data),
+			!N3 Odec(c_IV: t_IV, c:ciphertext, c_data: t_data) [useful_change] := dec(k, c_IV, c, c_data)) 
+     <=(N2 * Pencctxt(time + (N2-1)*(N*time(enc, maxlength(msg), maxlength(data)) + N3*time(dec,maxlength(c),maxlength(c_data))), N, N3, maxlength(msg), maxlength(c), maxlength(data), maxlength(c_data)))=> [computational]
+      ! N2 new k: key [unchanged]; 
+  	   (!N Oenc(IV: t_IV, msg: cleartext, data: t_data) := 
+      	      find i <= N suchthat defined(IV[i],r[i]) && IV = IV[i] then
+	          event_abort repeated_IV
+	      else
+		  let r: ciphertext = enc(k, IV, msg, data) in
+		  r,
+	    !N3 Odec(c_IV: t_IV, c:ciphertext, c_data: t_data) := 
+              find j <= N suchthat defined(IV[j],msg[j],data[j],r[j]) && 
+		  r[j] = c && data[j] = c_data && IV[j] = c_IV then 
+		  (let c_r = injbot(msg[j]) in c_r)
+	      else 
+		  (let c_r = bottom in c_r)).
+
+}
+
+(* Define as AEAD scheme as Encrypt-then-MAC, where encryption
+   is defined as CBC-mode of a block cipher and the MAC is
+   SUF-CMA *)
+
+define AEAD_TextSecure_ENC_then_MAC(emkey, cleartext, ciphertext, t_data, enc, dec, injbot, Zero, Penc, Pencctxt) {
+
+type mkey [fixed,large]. (* Mac key *)
+type ekey [fixed,large]. (* Encryption key *)
+
+(* Extraction of encryption and MAC keys from the pair *)
+
+fun get_ekey(emkey):ekey.
+fun get_mkey(emkey):mkey.
+
+param Nk.
+
+equiv emkey
+    !Nk new r:emkey; (O1():= get_ekey(r), O2():= get_mkey(r))
+<=(0)=>
+    !Nk (O1():= new k1: ekey; k1, O2():= new k2: mkey; k2).
+
+(* Encryption in CBC mode *)
+
+type t_IV [fixed,large].
+type ciphertext_internal.
+expand CBC_enc(ekey, cleartext, ciphertext_internal, t_IV, enc_internal, dec_internal, Zero, Penc).
+
+(* MAC *)
+
+type macres [fixed].
+expand SUF_CMA_mac_nokgen(mkey, bitstring, macres, hmac, check, Pencctxt).
+
+(* Concatenation of associated data *)
+
+fun concat_data(ciphertext_internal, t_data): bitstring [compos].
+
+(* Concatenation of MAC *)
+
+fun concat_MAC(ciphertext_internal, macres): ciphertext [compos].
+
+letfun enc(k: emkey, c: cleartext, d: t_data) =
+       let kENC = get_ekey(k) in
+       let kMAC = get_mkey(k) in 
+       new IV: t_IV;
+       let e = enc_internal(kENC, IV, c) in
+       let m = hmac(concat_data(e, d), kMAC) in
+       concat_MAC(e, m).
+
+letfun dec(k: emkey, e_MAC: ciphertext, d: t_data) =
+       let kENC = get_ekey(k) in
+       let kMAC = get_mkey(k) in 
+       let concat_MAC(e, m) = e_MAC in
+       if check(concat_data(e,d),  KMAC, m) then
+         injbot(dec_internal(kENC, e))
+       else
+	 bottom.
+
+}
+
+(* Define an AEAD scheme as AES-GCM with random IVs,
+   concatenated to the ciphertexts. *)
+
+define AEAD_TextSecure(key, cleartext, ciphertext_IV, t_data, enc, dec, injbot, Zero, Penc, Pencctxt) {
+
+type t_IV [large,fixed].
+type ciphertext.
+
+expand AEAD(key, cleartext, ciphertext, t_IV, t_data, enc_internal, dec_internal, injbot, Zero, Penc, Pencctxt).
+
+fun concat_IV(t_IV, ciphertext): ciphertext_IV [compos].
+
+letfun enc(k: key, c: cleartext, d: t_data) = 
+       new IV: t_IV;
+       let e = enc_internal(k, IV, c, d) in
+       concat_IV(IV, e).
+
+letfun dec(k: key, e_IV: ciphertext_IV, d: t_data) =
+       let concat_IV(IV, e) = e_IV in
+         dec_internal(k, IV, e, d)
+       else bottom.
+
+}

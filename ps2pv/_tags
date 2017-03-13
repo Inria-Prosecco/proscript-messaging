@@ -1,0 +1,5 @@
+true: use_menhir
+<*>: package(unix),package(menhirLib),package(ulex),package(pcre),package(str)
+<htmllexer.ml>: syntax(camlp4o)
+<phplexer.ml>: syntax(camlp4o)
+<lexer.ml>: syntax(camlp4o)

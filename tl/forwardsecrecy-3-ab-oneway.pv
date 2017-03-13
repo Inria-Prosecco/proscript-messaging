@@ -1,0 +1,688 @@
+free io:channel.
+
+type number.
+type function.
+type args.
+type return.
+type object_aesgcmencryptresult.
+type object_aesgcmdecryptresult.
+type key.
+type iv.
+type object_msg.
+type object_keypair.
+type array_2.
+type object_them.
+type object_sendoutput.
+type object_recvoutput.
+type object_3.
+type object_73.
+type object_89.
+type object_98.
+type object_120.
+type object_172.
+
+fun Type_key_construct():key.
+fun Type_key_toBitstring(key):bitstring [data, typeConverter].
+fun Type_key_fromBitstring(bitstring):key [data, typeConverter].
+fun Type_key_clone(key):key [data].
+reduc forall a:key; Type_key_assert(a) = a.
+fun Type_iv_construct():iv.
+fun Type_iv_toBitstring(iv):bitstring [data, typeConverter].
+fun Type_iv_fromBitstring(bitstring):iv [data, typeConverter].
+fun Type_iv_clone(iv):iv [data].
+reduc forall a:iv; Type_iv_assert(a) = a.
+fun Type_msg_construct():object_msg.
+fun Type_msg_toBitstring(object_msg):bitstring [data, typeConverter].
+fun Type_msg_fromBitstring(bitstring):object_msg [data, typeConverter].
+fun Type_msg_clone(object_msg):object_msg [data].
+reduc forall a:object_msg; Type_msg_assert(a) = a.
+fun Type_keypair_construct():object_keypair.
+fun Type_keypair_toBitstring(object_keypair):bitstring [data, typeConverter].
+fun Type_keypair_fromBitstring(bitstring):object_keypair [data, typeConverter].
+fun Type_keypair_clone(object_keypair):object_keypair [data].
+reduc forall a:object_keypair; Type_keypair_assert(a) = a.
+fun Type_them_construct():object_them.
+fun Type_them_toBitstring(object_them):bitstring [data, typeConverter].
+fun Type_them_fromBitstring(bitstring):object_them [data, typeConverter].
+fun Type_them_clone(object_them):object_them [data].
+reduc forall a:object_them; Type_them_assert(a) = a.
+fun Type_sendoutput_construct():object_sendoutput.
+fun Type_sendoutput_toBitstring(object_sendoutput):bitstring [data, typeConverter].
+fun Type_sendoutput_fromBitstring(bitstring):object_sendoutput [data, typeConverter].
+fun Type_sendoutput_clone(object_sendoutput):object_sendoutput [data].
+reduc forall a:object_sendoutput; Type_sendoutput_assert(a) = a.
+fun Type_recvoutput_construct():object_recvoutput.
+fun Type_recvoutput_toBitstring(object_recvoutput):bitstring [data, typeConverter].
+fun Type_recvoutput_fromBitstring(bitstring):object_recvoutput [data, typeConverter].
+fun Type_recvoutput_clone(object_recvoutput):object_recvoutput [data].
+reduc forall a:object_recvoutput; Type_recvoutput_assert(a) = a.
+
+fun Object_aesgcmencryptresult(bitstring, bitstring):object_aesgcmencryptresult [data].
+reduc forall ciphertext:bitstring, tag:bitstring;
+Object_aesgcmencryptresult_get_ciphertext(Object_aesgcmencryptresult(ciphertext, tag)) = ciphertext.
+reduc forall ciphertext:bitstring, tag:bitstring;
+Object_aesgcmencryptresult_get_tag(Object_aesgcmencryptresult(ciphertext, tag)) = tag.
+reduc forall ciphertext:bitstring, tag:bitstring, n:bitstring;
+Object_aesgcmencryptresult_set_ciphertext(Object_aesgcmencryptresult(ciphertext, tag), n) = Object_aesgcmencryptresult(n, tag).
+reduc forall ciphertext:bitstring, tag:bitstring, n:bitstring;
+Object_aesgcmencryptresult_set_tag(Object_aesgcmencryptresult(ciphertext, tag), n) = Object_aesgcmencryptresult(ciphertext, n).
+
+fun Object_aesgcmdecryptresult(bitstring, bool):object_aesgcmdecryptresult [data].
+reduc forall plaintext:bitstring, valid:bool;
+Object_aesgcmdecryptresult_get_plaintext(Object_aesgcmdecryptresult(plaintext, valid)) = plaintext.
+reduc forall plaintext:bitstring, valid:bool;
+Object_aesgcmdecryptresult_get_valid(Object_aesgcmdecryptresult(plaintext, valid)) = valid.
+reduc forall plaintext:bitstring, valid:bool, n:bitstring;
+Object_aesgcmdecryptresult_set_plaintext(Object_aesgcmdecryptresult(plaintext, valid), n) = Object_aesgcmdecryptresult(n, valid).
+reduc forall plaintext:bitstring, valid:bool, n:bool;
+Object_aesgcmdecryptresult_set_valid(Object_aesgcmdecryptresult(plaintext, valid), n) = Object_aesgcmdecryptresult(plaintext, n).
+
+fun Object_msg(bitstring, key, key, iv, number, bitstring, bool):object_msg [data].
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool;
+Object_msg_get_ciphertext(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid)) = ciphertext.
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool;
+Object_msg_get_ephemeralKey(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid)) = ephemeralKey.
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool;
+Object_msg_get_initEphemeralKey(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid)) = initEphemeralKey.
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool;
+Object_msg_get_iv(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid)) = iv.
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool;
+Object_msg_get_preKeyId(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid)) = preKeyId.
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool;
+Object_msg_get_tag(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid)) = tag.
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool;
+Object_msg_get_valid(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid)) = valid.
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool, n:bitstring;
+Object_msg_set_ciphertext(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid), n) = Object_msg(n, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid).
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool, n:key;
+Object_msg_set_ephemeralKey(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid), n) = Object_msg(ciphertext, n, initEphemeralKey, iv, preKeyId, tag, valid).
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool, n:key;
+Object_msg_set_initEphemeralKey(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid), n) = Object_msg(ciphertext, ephemeralKey, n, iv, preKeyId, tag, valid).
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool, n:iv;
+Object_msg_set_iv(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid), n) = Object_msg(ciphertext, ephemeralKey, initEphemeralKey, n, preKeyId, tag, valid).
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool, n:number;
+Object_msg_set_preKeyId(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid), n) = Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, n, tag, valid).
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool, n:bitstring;
+Object_msg_set_tag(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid), n) = Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, n, valid).
+reduc forall ciphertext:bitstring, ephemeralKey:key, initEphemeralKey:key, iv:iv, preKeyId:number, tag:bitstring, valid:bool, n:bool;
+Object_msg_set_valid(Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, valid), n) = Object_msg(ciphertext, ephemeralKey, initEphemeralKey, iv, preKeyId, tag, n).
+
+fun Object_keypair(key, key):object_keypair [data].
+reduc forall priv:key, pub:key;
+Object_keypair_get_priv(Object_keypair(priv, pub)) = priv.
+reduc forall priv:key, pub:key;
+Object_keypair_get_pub(Object_keypair(priv, pub)) = pub.
+reduc forall priv:key, pub:key, n:key;
+Object_keypair_set_priv(Object_keypair(priv, pub), n) = Object_keypair(n, pub).
+reduc forall priv:key, pub:key, n:key;
+Object_keypair_set_pub(Object_keypair(priv, pub), n) = Object_keypair(priv, n).
+
+fun Array_2(key, key):array_2 [data].
+reduc forall e_0:key, e_1:key;
+Array_2_get_e_0(Array_2(e_0, e_1)) = e_0.
+reduc forall e_0:key, e_1:key;
+Array_2_get_e_1(Array_2(e_0, e_1)) = e_1.
+reduc forall e_0:key, e_1:key, n:key;
+Array_2_set_e_0(Array_2(e_0, e_1), n) = Array_2(n, e_1).
+reduc forall e_0:key, e_1:key, n:key;
+Array_2_set_e_1(Array_2(e_0, e_1), n) = Array_2(e_0, n).
+
+fun Object_them(key, bool, key, key, object_keypair, object_keypair, object_keypair, key, number, array_2, array_2, key, key, bitstring):object_them [data].
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_ephemeralKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = ephemeralKey.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_established(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = established.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_identityDHKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = identityDHKey.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_identityKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = identityKey.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_myEphemeralKeyP0(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = myEphemeralKeyP0.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_myEphemeralKeyP1(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = myEphemeralKeyP1.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_myPreKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = myPreKey.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_preKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = preKey.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_preKeyId(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = preKeyId.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_recvKeys(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = recvKeys.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_sendKeys(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = sendKeys.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_shared(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = shared.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_signedPreKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = signedPreKey.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring;
+Object_them_get_signedPreKeySignature(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature)) = signedPreKeySignature.
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:key;
+Object_them_set_ephemeralKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(n, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:bool;
+Object_them_set_established(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, n, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:key;
+Object_them_set_identityDHKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, n, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:key;
+Object_them_set_identityKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, n, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:object_keypair;
+Object_them_set_myEphemeralKeyP0(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, n, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:object_keypair;
+Object_them_set_myEphemeralKeyP1(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, n, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:object_keypair;
+Object_them_set_myPreKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, n, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:key;
+Object_them_set_preKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, n, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:number;
+Object_them_set_preKeyId(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, n, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:array_2;
+Object_them_set_recvKeys(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, n, sendKeys, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:array_2;
+Object_them_set_sendKeys(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, n, shared, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:key;
+Object_them_set_shared(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, n, signedPreKey, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:key;
+Object_them_set_signedPreKey(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, n, signedPreKeySignature).
+reduc forall ephemeralKey:key, established:bool, identityDHKey:key, identityKey:key, myEphemeralKeyP0:object_keypair, myEphemeralKeyP1:object_keypair, myPreKey:object_keypair, preKey:key, preKeyId:number, recvKeys:array_2, sendKeys:array_2, shared:key, signedPreKey:key, signedPreKeySignature:bitstring, n:bitstring;
+Object_them_set_signedPreKeySignature(Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, signedPreKeySignature), n) = Object_them(ephemeralKey, established, identityDHKey, identityKey, myEphemeralKeyP0, myEphemeralKeyP1, myPreKey, preKey, preKeyId, recvKeys, sendKeys, shared, signedPreKey, n).
+
+fun Object_sendoutput(object_msg, object_them):object_sendoutput [data].
+reduc forall output:object_msg, them:object_them;
+Object_sendoutput_get_output(Object_sendoutput(output, them)) = output.
+reduc forall output:object_msg, them:object_them;
+Object_sendoutput_get_them(Object_sendoutput(output, them)) = them.
+reduc forall output:object_msg, them:object_them, n:object_msg;
+Object_sendoutput_set_output(Object_sendoutput(output, them), n) = Object_sendoutput(n, them).
+reduc forall output:object_msg, them:object_them, n:object_them;
+Object_sendoutput_set_them(Object_sendoutput(output, them), n) = Object_sendoutput(output, n).
+
+fun Object_recvoutput(object_msg, bitstring, object_them):object_recvoutput [data].
+reduc forall output:object_msg, plaintext:bitstring, them:object_them;
+Object_recvoutput_get_output(Object_recvoutput(output, plaintext, them)) = output.
+reduc forall output:object_msg, plaintext:bitstring, them:object_them;
+Object_recvoutput_get_plaintext(Object_recvoutput(output, plaintext, them)) = plaintext.
+reduc forall output:object_msg, plaintext:bitstring, them:object_them;
+Object_recvoutput_get_them(Object_recvoutput(output, plaintext, them)) = them.
+reduc forall output:object_msg, plaintext:bitstring, them:object_them, n:object_msg;
+Object_recvoutput_set_output(Object_recvoutput(output, plaintext, them), n) = Object_recvoutput(n, plaintext, them).
+reduc forall output:object_msg, plaintext:bitstring, them:object_them, n:bitstring;
+Object_recvoutput_set_plaintext(Object_recvoutput(output, plaintext, them), n) = Object_recvoutput(output, n, them).
+reduc forall output:object_msg, plaintext:bitstring, them:object_them, n:object_them;
+Object_recvoutput_set_them(Object_recvoutput(output, plaintext, them), n) = Object_recvoutput(output, plaintext, n).
+
+fun Object_3(function, function, function, function, function, function):object_3 [data].
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function;
+Object_3_get_HKDF(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair)) = HKDF.
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function;
+Object_3_get_QDHInit(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair)) = QDHInit.
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function;
+Object_3_get_QDHResp(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair)) = QDHResp.
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function;
+Object_3_get_getDHPublicKey(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair)) = getDHPublicKey.
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function;
+Object_3_get_newIdentityKey(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair)) = newIdentityKey.
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function;
+Object_3_get_newKeyPair(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair)) = newKeyPair.
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function, n:function;
+Object_3_set_HKDF(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair), n) = Object_3(n, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair).
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function, n:function;
+Object_3_set_QDHInit(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair), n) = Object_3(HKDF, n, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair).
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function, n:function;
+Object_3_set_QDHResp(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair), n) = Object_3(HKDF, QDHInit, n, getDHPublicKey, newIdentityKey, newKeyPair).
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function, n:function;
+Object_3_set_getDHPublicKey(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair), n) = Object_3(HKDF, QDHInit, QDHResp, n, newIdentityKey, newKeyPair).
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function, n:function;
+Object_3_set_newIdentityKey(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair), n) = Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, n, newKeyPair).
+reduc forall HKDF:function, QDHInit:function, QDHResp:function, getDHPublicKey:function, newIdentityKey:function, newKeyPair:function, n:function;
+Object_3_set_newKeyPair(Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, newKeyPair), n) = Object_3(HKDF, QDHInit, QDHResp, getDHPublicKey, newIdentityKey, n).
+
+fun Object_73(function, function, function):object_73 [data].
+reduc forall deriveRecvKeys:function, deriveSendKeys:function, tryDecrypt:function;
+Object_73_get_deriveRecvKeys(Object_73(deriveRecvKeys, deriveSendKeys, tryDecrypt)) = deriveRecvKeys.
+reduc forall deriveRecvKeys:function, deriveSendKeys:function, tryDecrypt:function;
+Object_73_get_deriveSendKeys(Object_73(deriveRecvKeys, deriveSendKeys, tryDecrypt)) = deriveSendKeys.
+reduc forall deriveRecvKeys:function, deriveSendKeys:function, tryDecrypt:function;
+Object_73_get_tryDecrypt(Object_73(deriveRecvKeys, deriveSendKeys, tryDecrypt)) = tryDecrypt.
+reduc forall deriveRecvKeys:function, deriveSendKeys:function, tryDecrypt:function, n:function;
+Object_73_set_deriveRecvKeys(Object_73(deriveRecvKeys, deriveSendKeys, tryDecrypt), n) = Object_73(n, deriveSendKeys, tryDecrypt).
+reduc forall deriveRecvKeys:function, deriveSendKeys:function, tryDecrypt:function, n:function;
+Object_73_set_deriveSendKeys(Object_73(deriveRecvKeys, deriveSendKeys, tryDecrypt), n) = Object_73(deriveRecvKeys, n, tryDecrypt).
+reduc forall deriveRecvKeys:function, deriveSendKeys:function, tryDecrypt:function, n:function;
+Object_73_set_tryDecrypt(Object_73(deriveRecvKeys, deriveSendKeys, tryDecrypt), n) = Object_73(deriveRecvKeys, deriveSendKeys, n).
+
+fun Object_89(key, array_2):object_89 [data].
+reduc forall kENC:key, recvKeys:array_2;
+Object_89_get_kENC(Object_89(kENC, recvKeys)) = kENC.
+reduc forall kENC:key, recvKeys:array_2;
+Object_89_get_recvKeys(Object_89(kENC, recvKeys)) = recvKeys.
+reduc forall kENC:key, recvKeys:array_2, n:key;
+Object_89_set_kENC(Object_89(kENC, recvKeys), n) = Object_89(n, recvKeys).
+reduc forall kENC:key, recvKeys:array_2, n:array_2;
+Object_89_set_recvKeys(Object_89(kENC, recvKeys), n) = Object_89(kENC, n).
+
+fun Object_98(key, array_2):object_98 [data].
+reduc forall kENC:key, sendKeys:array_2;
+Object_98_get_kENC(Object_98(kENC, sendKeys)) = kENC.
+reduc forall kENC:key, sendKeys:array_2;
+Object_98_get_sendKeys(Object_98(kENC, sendKeys)) = sendKeys.
+reduc forall kENC:key, sendKeys:array_2, n:key;
+Object_98_set_kENC(Object_98(kENC, sendKeys), n) = Object_98(n, sendKeys).
+reduc forall kENC:key, sendKeys:array_2, n:array_2;
+Object_98_set_sendKeys(Object_98(kENC, sendKeys), n) = Object_98(kENC, n).
+
+fun Object_120(function, function, function, function):object_120 [data].
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function;
+Object_120_get_AKEInit(Object_120(AKEInit, AKENeeded, receiving, sending)) = AKEInit.
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function;
+Object_120_get_AKENeeded(Object_120(AKEInit, AKENeeded, receiving, sending)) = AKENeeded.
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function;
+Object_120_get_receiving(Object_120(AKEInit, AKENeeded, receiving, sending)) = receiving.
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function;
+Object_120_get_sending(Object_120(AKEInit, AKENeeded, receiving, sending)) = sending.
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function, n:function;
+Object_120_set_AKEInit(Object_120(AKEInit, AKENeeded, receiving, sending), n) = Object_120(n, AKENeeded, receiving, sending).
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function, n:function;
+Object_120_set_AKENeeded(Object_120(AKEInit, AKENeeded, receiving, sending), n) = Object_120(AKEInit, n, receiving, sending).
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function, n:function;
+Object_120_set_receiving(Object_120(AKEInit, AKENeeded, receiving, sending), n) = Object_120(AKEInit, AKENeeded, n, sending).
+reduc forall AKEInit:function, AKENeeded:function, receiving:function, sending:function, n:function;
+Object_120_set_sending(Object_120(AKEInit, AKENeeded, receiving, sending), n) = Object_120(AKEInit, AKENeeded, receiving, n).
+
+fun Object_172(function, function, function):object_172 [data].
+reduc forall newSession:function, recv:function, send:function;
+Object_172_get_newSession(Object_172(newSession, recv, send)) = newSession.
+reduc forall newSession:function, recv:function, send:function;
+Object_172_get_recv(Object_172(newSession, recv, send)) = recv.
+reduc forall newSession:function, recv:function, send:function;
+Object_172_get_send(Object_172(newSession, recv, send)) = send.
+reduc forall newSession:function, recv:function, send:function, n:function;
+Object_172_set_newSession(Object_172(newSession, recv, send), n) = Object_172(n, recv, send).
+reduc forall newSession:function, recv:function, send:function, n:function;
+Object_172_set_recv(Object_172(newSession, recv, send), n) = Object_172(newSession, n, send).
+reduc forall newSession:function, recv:function, send:function, n:function;
+Object_172_set_send(Object_172(newSession, recv, send), n) = Object_172(newSession, recv, n).
+
+
+const number_186:number [data]. (* 0.000000 *)
+const string_1:bitstring [data]. (*  *)
+const string_14:bitstring [data]. (* 01 *)
+const string_17:bitstring [data]. (* 02 *)
+const string_61:bitstring [data]. (* aID *)
+const string_69:bitstring [data]. (* aPK *)
+const string_80:bitstring [data]. (* WhisperRatchet *)
+const string_84:bitstring [data]. (* 1 *)
+const string_87:bitstring [data]. (* WhisperMessageKeys *)
+const string_148:bitstring [data]. (* a4 *)
+const string_157:bitstring [data]. (* a1 *)
+const string_183:bitstring [data]. (* a2 *)
+const string_209:bitstring [data]. (* a3 *)
+const key_0:key [data].
+const iv_0:iv [data].
+const key_56:key [data].
+
+const nullArgs:args [data].
+const HKDF:function [data].
+const QDHInit:function [data].
+const QDHResp:function [data].
+const getDHPublicKey:function [data].
+const newIdentityKey:function [data].
+const newKeyPair:function [data].
+const deriveRecvKeys:function [data].
+const deriveSendKeys:function [data].
+const tryDecrypt:function [data].
+const AKEInit:function [data].
+const AKENeeded:function [data].
+const receiving:function [data].
+const sending:function [data].
+const newSession:function [data].
+const recv:function [data].
+const send:function [data].
+
+
+fun add(number, number):number [data].
+fun str_add(bitstring, bitstring):bitstring [data].
+fun modulo(number, number):number [data].
+fun divide(number, number):number [data].
+fun multiply(number, number):number [data].
+fun subtract(number, number):number [data].
+fun bitShiftLeft(number, number):number [data].
+fun bitShiftRight(number, number):number [data].
+fun bitFillZero(number, number):number [data].
+fun lessThan(number, number):number [data].
+fun greaterThan(number, number):number [data].
+fun lessThanOrEqual(number, number):number [data].
+fun greaterThanOrEqual(number, number):number [data].
+fun bitAND(number, number):number [data].
+fun bitXOR(number, number):number [data].
+fun bitOR(number, number):number [data].
+fun bitNOT(number, number):number [data].
+fun minus(number, number):number [data].
+fun plus(number, number):number [data].
+fun one_way(key, bitstring):key.
+fun ProScript_crypto_DH25519(key, key):key.
+equation forall a:key, b:key;
+	ProScript_crypto_DH25519(b, ProScript_crypto_DH25519(a, key_56)) =
+	ProScript_crypto_DH25519(a, ProScript_crypto_DH25519(b, key_56)).
+(*
+fun ProScript_crypto_DHP256(key, key):key.
+fun ProScript_crypto_DHP256Public(key):key.
+equation forall a:key, b:key;
+	ProScript_crypto_DHP256(a, ProScript_crypto_DHP256Public(b)) =
+	ProScript_crypto_DHP256(b, ProScript_crypto_DHP256Public(b)).
+*)
+fun AESGCM_encrypt(key, iv, bitstring, bitstring):bitstring.
+fun AESGCM_tag(key, iv, bitstring, bitstring):bitstring.
+reduc forall k:key, i:iv, m:bitstring, a:bitstring; ProScript_crypto_AESGCMEncrypt(k, i, m, a) =
+	Object_aesgcmencryptresult(
+		AESGCM_encrypt(k, i, m, a),
+		AESGCM_tag(k, i, m, a)
+	).
+
+fun ProScript_crypto_AESGCMDecrypt(key, iv, object_aesgcmencryptresult, bitstring):object_aesgcmdecryptresult reduc
+	forall k:key, i:iv, m:bitstring, a:bitstring;
+		ProScript_crypto_AESGCMDecrypt(k, i, Object_aesgcmencryptresult(
+			AESGCM_encrypt(k, i, m, a), AESGCM_tag(k, i, m, a)), a
+		) = Object_aesgcmdecryptresult(m, true)
+	otherwise forall k:key, i:iv, c:object_aesgcmencryptresult, a:bitstring;
+		ProScript_crypto_AESGCMDecrypt(k, i, c, a) = Object_aesgcmdecryptresult(string_1, false).
+fun ProScript_crypto_AESCTREncrypt(key, iv, bitstring):bitstring.
+reduc forall k:key, i:iv, m:bitstring; ProScript_crypto_AESCTRDecrypt(
+	k, i, ProScript_crypto_AESCTREncrypt(k, i, m)
+) = m.
+(* reduc forall k:key, i:iv, m1:bitstring, m2:bitstring;
+	AESCTRReuse(ProScript_crypto_AESCTREncrypt(k, i, m1), ProScript_crypto_AESCTREncrypt(k, i, m2)) = (m1, m2). *)
+fun ProScript_crypto_SHA256(bitstring):bitstring.
+fun ProScript_crypto_ED25519_publicKey(key):key.
+fun ProScript_crypto_ED25519_signature(bitstring, key, key):bitstring.
+reduc forall m:bitstring, sk:key, pk:key; ProScript_crypto_ED25519_checkValid(ProScript_crypto_ED25519_signature(m, sk, pk), m, pk) = true.
+fun ProScript_crypto_HMACSHA256(key, bitstring):key.
+reduc forall k:key, m:bitstring; ProScript_crypto_checkHMACSHA256(k, m, ProScript_crypto_HMACSHA256(k, m)) = true.
+fun ProScript_crypto_random32Bytes(bitstring):key [private].
+fun ProScript_crypto_random12Bytes(bitstring):iv  [private].
+fun ProScript_crypto_HKDF_expand(bitstring, bitstring, bitstring, number):bitstring.
+fun ProScript_crypto_tls12_prf_label(bitstring, bitstring, number, number):bitstring.
+
+
+letfun fun_HKDF(ikm:key, salt:key, info:bitstring) =
+let prk = ProScript_crypto_HMACSHA256(salt, Type_key_toBitstring(ikm)) in
+let k0 = ProScript_crypto_HMACSHA256(prk, str_add(info, string_14)) in
+let k1 = ProScript_crypto_HMACSHA256(prk, str_add(str_add(Type_key_toBitstring(k0), info), string_17)) in
+Array_2(k0, k1).
+
+letfun fun_QDHInit(myIdentityKeyPriv:key, myInitEphemeralKeyPriv:key, theirIdentityKeyPub:key, theirSignedPreKeyPub:key, theirPreKeyPub:key) =
+Type_key_fromBitstring(ProScript_crypto_SHA256(str_add(str_add(str_add(Type_key_toBitstring(ProScript_crypto_DH25519(myIdentityKeyPriv, theirSignedPreKeyPub)), Type_key_toBitstring(ProScript_crypto_DH25519(myInitEphemeralKeyPriv, theirIdentityKeyPub))), Type_key_toBitstring(ProScript_crypto_DH25519(myInitEphemeralKeyPriv, theirSignedPreKeyPub))), Type_key_toBitstring(ProScript_crypto_DH25519(myInitEphemeralKeyPriv, theirPreKeyPub))))).
+
+letfun fun_QDHResp(myIdentityKeyPriv:key, mySignedPreKeyPriv:key, myPreKeyPriv:key, theirIdentityKeyPub:key, theirEphemeralKeyPub:key) =
+Type_key_fromBitstring(ProScript_crypto_SHA256(str_add(str_add(str_add(Type_key_toBitstring(ProScript_crypto_DH25519(mySignedPreKeyPriv, theirIdentityKeyPub)), Type_key_toBitstring(ProScript_crypto_DH25519(myIdentityKeyPriv, theirEphemeralKeyPub))), Type_key_toBitstring(ProScript_crypto_DH25519(mySignedPreKeyPriv, theirEphemeralKeyPub))), Type_key_toBitstring(ProScript_crypto_DH25519(myPreKeyPriv, theirEphemeralKeyPub))))).
+
+letfun fun_getDHPublicKey(priv:key) =
+ProScript_crypto_DH25519(priv, key_56).
+
+letfun fun_newIdentityKey(id:bitstring) =
+let identityKeyPriv = ProScript_crypto_random32Bytes(str_add(string_61, id)) in
+Type_keypair_assert(Object_keypair(identityKeyPriv, ProScript_crypto_ED25519_publicKey(identityKeyPriv))).
+
+letfun fun_newKeyPair(id:bitstring) =
+let priv = ProScript_crypto_random32Bytes(str_add(string_69, id)) in
+Object_keypair(priv, ProScript_crypto_DH25519(priv, key_56)).
+
+letfun fun_deriveRecvKeys(myShare:key, them:object_them, theirEphemeralKeyPub:key) =
+let kShared = ProScript_crypto_DH25519(myShare, theirEphemeralKeyPub) in
+let recvKeys = fun_HKDF(kShared, Array_2_get_e_0(Object_them_get_sendKeys(them)), string_80) in
+let kKeys = fun_HKDF(ProScript_crypto_HMACSHA256(Array_2_get_e_1(recvKeys), string_84), Type_key_construct(), string_87) in
+Object_89(Array_2_get_e_0(kKeys), recvKeys).
+
+letfun fun_deriveSendKeys(them:object_them, myEphemeralKeyPriv:key) =
+let kShared = ProScript_crypto_DH25519(myEphemeralKeyPriv, Object_them_get_ephemeralKey(them)) in
+let sendKeys = fun_HKDF(kShared, Array_2_get_e_0(Object_them_get_recvKeys(them)), string_80) in
+let kKeys = fun_HKDF(ProScript_crypto_HMACSHA256(Array_2_get_e_1(sendKeys), string_84), Type_key_construct(), string_87) in
+Object_98(Array_2_get_e_0(kKeys), sendKeys).
+
+letfun fun_tryDecrypt(myIdentityKey:object_keypair, myEphemeralKey:object_keypair, them:object_them, msg:object_msg) =
+let keys = fun_deriveRecvKeys(Object_keypair_get_priv(myEphemeralKey), Type_them_assert(them), Object_msg_get_ephemeralKey(msg)) in
+let hENC = Type_key_fromBitstring(ProScript_crypto_SHA256(str_add(Type_key_toBitstring(Object_89_get_kENC(keys)), Type_iv_toBitstring(Object_msg_get_iv(msg))))) in
+let aes = ProScript_crypto_AESGCMDecrypt(hENC, Object_msg_get_iv(msg), Object_aesgcmencryptresult(Object_msg_get_ciphertext(msg), Object_msg_get_tag(msg)), str_add(str_add(str_add(str_add(Type_key_toBitstring(Object_msg_get_initEphemeralKey(msg)), Type_key_toBitstring(Object_msg_get_ephemeralKey(msg))), Type_key_toBitstring(Object_keypair_get_pub(myEphemeralKey))), Type_key_toBitstring(Object_them_get_identityKey(them))), Type_key_toBitstring(Object_keypair_get_pub(myIdentityKey)))) in
+aes.
+
+letfun fun_AKEInit(myIdentityKey:object_keypair, mySignedPreKey:object_keypair, them:object_them, msg:object_msg) =
+let shared = fun_QDHResp(Object_keypair_get_priv(myIdentityKey), Object_keypair_get_priv(mySignedPreKey), Object_keypair_get_priv(Object_them_get_myPreKey(them)), Object_them_get_identityDHKey(them), Object_msg_get_initEphemeralKey(msg)) in
+let sendKeys = fun_HKDF(shared, Type_key_construct(), string_80) in
+Object_them(Object_them_get_ephemeralKey(them), true, Object_them_get_identityDHKey(them), Object_them_get_identityKey(them), Object_them_get_myEphemeralKeyP0(them), Object_them_get_myEphemeralKeyP1(them), Object_them_get_myPreKey(them), Object_them_get_preKey(them), Object_msg_get_preKeyId(msg), Object_them_get_recvKeys(them), sendKeys, shared, Object_them_get_signedPreKey(them), Object_them_get_signedPreKeySignature(them)).
+
+letfun fun_AKENeeded(myIdentityKey:object_keypair, initEphemeralKey:object_keypair, them:object_them) =
+let shared = fun_QDHInit(Object_keypair_get_priv(myIdentityKey), Object_keypair_get_priv(initEphemeralKey), Object_them_get_identityDHKey(them), Object_them_get_signedPreKey(them), Object_them_get_preKey(them)) in
+let recvKeys = fun_HKDF(shared, Type_key_construct(), string_80) in
+let validSig = ProScript_crypto_ED25519_checkValid(Object_them_get_signedPreKeySignature(them), Type_key_toBitstring(Object_them_get_signedPreKey(them)), Object_them_get_identityKey(them)) in
+Object_them(Object_them_get_ephemeralKey(them), validSig, Object_them_get_identityDHKey(them), Object_them_get_identityKey(them), Object_them_get_myEphemeralKeyP0(them), Object_them_get_myEphemeralKeyP1(them), Object_them_get_myPreKey(them), Object_them_get_preKey(them), Object_them_get_preKeyId(them), recvKeys, Object_them_get_sendKeys(them), shared, Object_them_get_signedPreKey(them), Object_them_get_signedPreKeySignature(them)).
+
+letfun fun_receiving(myIdentityKey:object_keypair, them:object_them, msg:object_msg) =
+let them = Type_them_assert(them) in
+let dec = fun_tryDecrypt(myIdentityKey, Object_them_get_myEphemeralKeyP1(them), them, msg) in
+if (Object_aesgcmdecryptresult_get_valid(dec)) then (
+Object_recvoutput(Object_msg(string_1, Type_key_construct(), Type_key_construct(), Type_iv_construct(), Object_msg_get_preKeyId(msg), string_1, Object_aesgcmdecryptresult_get_valid(dec) && Object_them_get_established(them)), Object_aesgcmdecryptresult_get_plaintext(dec), Object_them(Object_msg_get_ephemeralKey(msg), Object_them_get_established(them), Object_them_get_identityDHKey(them), Object_them_get_identityKey(them), Object_them_get_myEphemeralKeyP1(them), fun_newKeyPair(string_148), Object_them_get_myPreKey(them), Object_them_get_preKey(them), Object_msg_get_preKeyId(msg), Object_them_get_recvKeys(them), Object_them_get_sendKeys(them), Object_them_get_shared(them), Object_them_get_signedPreKey(them), Object_them_get_signedPreKeySignature(them))))
+else (
+let dec = fun_tryDecrypt(myIdentityKey, Object_them_get_myEphemeralKeyP0(them), them, msg) in
+
+Object_recvoutput(Object_msg(string_1, Type_key_construct(), Type_key_construct(), Type_iv_construct(), Object_msg_get_preKeyId(msg), string_1, Object_aesgcmdecryptresult_get_valid(dec) && Object_them_get_established(them)), Object_aesgcmdecryptresult_get_plaintext(dec), Object_them(Object_msg_get_ephemeralKey(msg), Object_them_get_established(them), Object_them_get_identityDHKey(them), Object_them_get_identityKey(them), Object_them_get_myEphemeralKeyP0(them), Object_them_get_myEphemeralKeyP1(them), Object_them_get_myPreKey(them), Object_them_get_preKey(them), Object_msg_get_preKeyId(msg), Object_them_get_recvKeys(them), Object_them_get_sendKeys(them), Object_them_get_shared(them), Object_them_get_signedPreKey(them), Object_them_get_signedPreKeySignature(them)))).
+
+letfun fun_sending(myIdentityKey:object_keypair, them:object_them, initEphemeralKeyPub:key, plaintext:bitstring) =
+let keys = fun_deriveSendKeys(Type_them_assert(them), Object_keypair_get_priv(Object_them_get_myEphemeralKeyP1(them))) in
+let iv = Type_iv_assert(ProScript_crypto_random12Bytes(string_157)) in
+let hENC = Type_key_fromBitstring(ProScript_crypto_SHA256(str_add(Type_key_toBitstring(Object_98_get_kENC(keys)), Type_iv_toBitstring(iv)))) in
+let enc = ProScript_crypto_AESGCMEncrypt(hENC, iv, plaintext, str_add(str_add(str_add(str_add(Type_key_toBitstring(initEphemeralKeyPub), Type_key_toBitstring(Object_keypair_get_pub(Object_them_get_myEphemeralKeyP1(them)))), Type_key_toBitstring(Object_them_get_ephemeralKey(them))), Type_key_toBitstring(Object_keypair_get_pub(myIdentityKey))), Type_key_toBitstring(Object_them_get_identityKey(them)))) in
+Object_sendoutput(Object_msg(Object_aesgcmencryptresult_get_ciphertext(enc), Object_keypair_get_pub(Object_them_get_myEphemeralKeyP1(them)), initEphemeralKeyPub, iv, Object_them_get_preKeyId(them), Object_aesgcmencryptresult_get_tag(enc), Object_them_get_established(them)), Object_them(Object_them_get_ephemeralKey(them), Object_them_get_established(them), Object_them_get_identityDHKey(them), Object_them_get_identityKey(them), Object_them_get_myEphemeralKeyP0(them), Object_them_get_myEphemeralKeyP1(them), Object_them_get_myPreKey(them), Object_them_get_preKey(them), Object_them_get_preKeyId(them), Object_them_get_recvKeys(them), Object_them_get_sendKeys(them), Object_them_get_shared(them), Object_them_get_signedPreKey(them), Object_them_get_signedPreKeySignature(them))).
+
+letfun fun_newSession(mySignedPreKey:object_keypair, myPreKey:object_keypair, theirIdentityKeyPub:bitstring, theirIdentityDHKeyPub:bitstring, theirSignedPreKeyPub:bitstring, theirSignedPreKeySignature:bitstring, theirPreKeyPub:bitstring, preKeyId:number) =
+Object_them(Type_key_fromBitstring(theirSignedPreKeyPub), false, Type_key_fromBitstring(theirIdentityDHKeyPub), Type_key_fromBitstring(theirIdentityKeyPub), Type_keypair_assert(mySignedPreKey), fun_newKeyPair(string_183), Type_keypair_assert(myPreKey), Type_key_fromBitstring(theirPreKeyPub), add(preKeyId, number_186), Array_2(Type_key_construct(), Type_key_construct()), Array_2(Type_key_construct(), Type_key_construct()), Type_key_construct(), Type_key_fromBitstring(theirSignedPreKeyPub), theirSignedPreKeySignature).
+
+letfun fun_recv(myIdentityKey:object_keypair, mySignedPreKey:object_keypair, them:object_them, msg:object_msg) =
+let myIdentityKey = Type_keypair_assert(myIdentityKey) in
+let mySignedPreKey = Type_keypair_assert(mySignedPreKey) in
+let them = Type_them_assert(them) in
+let msg = Type_msg_assert(msg) in
+if (Object_them_get_established(them) = false) then (
+fun_receiving(myIdentityKey, fun_AKEInit(myIdentityKey, mySignedPreKey, them, msg), msg))
+else (
+fun_receiving(myIdentityKey, them, msg)).
+
+letfun fun_send(myIdentityKey:object_keypair, them:object_them, plaintext:bitstring) =
+let myIdentityKey = Type_keypair_assert(myIdentityKey) in
+let them = Type_them_assert(them) in
+let initEphemeralKey = Object_keypair(Type_key_construct(), Type_key_construct()) in
+if (Object_them_get_established(them) = false) then (
+let initEphemeralKey = fun_newKeyPair(string_209) in
+
+fun_sending(myIdentityKey, fun_AKENeeded(myIdentityKey, initEphemeralKey, them), Object_keypair_get_pub(initEphemeralKey), plaintext))
+else (
+fun_sending(myIdentityKey, them, Type_key_construct(), plaintext)).
+
+
+
+const number_1:number [data].
+const string_tl1:bitstring [data].
+const string_tl2:bitstring [data].
+const string_tl3:bitstring [data].
+const string_tl4:bitstring [data].
+const string_tl5:bitstring [data].
+const string_tl6:bitstring [data].
+const string_tl7:bitstring [data].
+const string_tl8:bitstring [data].
+const string_tl9:bitstring [data].
+
+free secMsg1:bitstring [private].
+free secMsg2:bitstring [private].
+free secMsg3:bitstring [private].
+set redundancyElim = no.
+query attacker(secMsg1).
+event Send(key, key, bitstring).
+event Recv(key, key, bitstring).
+
+let Initiator(
+	initiatorIdentityKey:object_keypair,
+	initiatorSignedPreKey:object_keypair,
+	initiatorPreKey:object_keypair,
+	responderIdentityKeyPub:key,
+	responderIdentityDHKeyPub:key
+) =
+	out(io, (
+		Object_keypair_get_pub(initiatorSignedPreKey),
+		ProScript_crypto_ED25519_signature(
+			Type_key_toBitstring(Object_keypair_get_pub(initiatorSignedPreKey)),
+			Object_keypair_get_priv(initiatorIdentityKey),
+			Object_keypair_get_pub(initiatorIdentityKey)
+		),
+		Object_keypair_get_pub(initiatorPreKey)
+	));
+	in(io, (
+		responderSignedPreKeyPub:key,
+		responderSignedPreKeySignature:bitstring,
+		responderPreKeyPub:key
+	));
+	let them = fun_newSession(
+		initiatorSignedPreKey,
+		initiatorPreKey,
+		Type_key_toBitstring(responderIdentityKeyPub),
+		Type_key_toBitstring(responderIdentityDHKeyPub),
+		Type_key_toBitstring(responderSignedPreKeyPub),
+		responderSignedPreKeySignature,
+		Type_key_toBitstring(responderPreKeyPub),
+		number_1
+	) in
+	let s1 = fun_send(initiatorIdentityKey, them, secMsg1) in
+	let o1 = Object_sendoutput_get_output(s1) in
+	if (Object_msg_get_valid(o1) = true) then (
+		event Send(
+			Object_keypair_get_pub(initiatorIdentityKey),
+			Object_them_get_identityKey(them),
+			secMsg1
+		);
+		out(io, o1);
+		let them = Object_sendoutput_get_them(s1) in
+		in(io, o3:object_msg);
+		let s4 = fun_recv(initiatorIdentityKey, initiatorSignedPreKey, them, o3) in
+		let o4 = Object_recvoutput_get_output(s4) in
+		if (Object_msg_get_valid(o4) = true) then (
+			event Recv(
+				Object_them_get_identityKey(them),
+				Object_keypair_get_pub(initiatorIdentityKey),
+				Object_recvoutput_get_plaintext(s4)
+			);
+			let them = Object_recvoutput_get_them(s4) in
+			let s5 = fun_send(initiatorIdentityKey, them, secMsg3) in
+			let o5 = Object_sendoutput_get_output(s5) in
+			if (Object_msg_get_valid(o5) = true) then (
+				event Send(
+					Object_keypair_get_pub(initiatorIdentityKey),
+					Object_them_get_identityKey(them),
+					secMsg3
+				);
+				out(io, o5);
+				let them = Object_sendoutput_get_them(s5) in
+				phase 1;
+				out(io, Object_them_get_myEphemeralKeyP1(them))
+			)
+		)
+	).
+
+let Responder(
+	responderIdentityKey:object_keypair,
+	responderSignedPreKey:object_keypair,
+	responderPreKey:object_keypair,
+	initiatorIdentityKeyPub:key,
+	initiatorIdentityDHKeyPub:key
+) =
+	out(io, (
+		Object_keypair_get_pub(responderSignedPreKey),
+		ProScript_crypto_ED25519_signature(
+			Type_key_toBitstring(Object_keypair_get_pub(responderSignedPreKey)),
+			Object_keypair_get_priv(responderIdentityKey),
+			Object_keypair_get_pub(responderIdentityKey)
+		),
+		Object_keypair_get_pub(responderPreKey)
+	));
+	in(io, (
+		initiatorSignedPreKeyPub:key,
+		initiatorSignedPreKeySignature:bitstring,
+		initiatorPreKeyPub:key
+	));
+	let them = fun_newSession(
+		responderSignedPreKey,
+		responderPreKey,
+		Type_key_toBitstring(initiatorIdentityKeyPub),
+		Type_key_toBitstring(initiatorIdentityDHKeyPub),
+		Type_key_toBitstring(initiatorSignedPreKeyPub),
+		initiatorSignedPreKeySignature,
+		Type_key_toBitstring(initiatorPreKeyPub),
+		number_1
+	) in
+	in(io, o1:object_msg);
+	let s2 = fun_recv(responderIdentityKey, responderSignedPreKey, them, o1) in
+	let o2 = Object_recvoutput_get_output(s2) in
+	if (Object_msg_get_valid(o2) = true) then (
+		event Recv(
+			Object_them_get_identityKey(them),
+			Object_keypair_get_pub(responderIdentityKey),
+			Object_recvoutput_get_plaintext(s2)
+		);
+		let them = Object_recvoutput_get_them(s2) in
+		let s3 = fun_send(responderIdentityKey, them, secMsg2) in
+		let o3 = Object_sendoutput_get_output(s3) in
+		if (Object_msg_get_valid(o3) = true) then (
+			event Send(
+				Object_keypair_get_pub(responderIdentityKey),
+				Object_them_get_identityKey(them),
+				secMsg2
+			);
+			out(io, o3);
+			let them = Object_sendoutput_get_them(s3) in
+			in(io, o6:object_msg);
+			let s6 = fun_recv(responderIdentityKey, responderSignedPreKey, them, o6) in
+			let o6 = Object_recvoutput_get_output(s6) in
+			if (Object_msg_get_valid(o6) = true) then (
+				event Recv(
+					Object_them_get_identityKey(them),
+					Object_keypair_get_pub(responderIdentityKey),
+					Object_recvoutput_get_plaintext(s6)
+				);
+				let them = Object_recvoutput_get_them(s6) in 0
+			)
+		)
+	).
+
+process
+
+let aliceIdentityKey = Object_keypair(
+	ProScript_crypto_random32Bytes(string_tl1),
+	ProScript_crypto_ED25519_publicKey(ProScript_crypto_random32Bytes(string_tl1))
+) in
+let bobIdentityKey = Object_keypair(
+	ProScript_crypto_random32Bytes(string_tl2),
+	ProScript_crypto_ED25519_publicKey(ProScript_crypto_random32Bytes(string_tl2))
+) in
+let malloryIdentityKey = Object_keypair(
+	ProScript_crypto_random32Bytes(string_tl3),
+	ProScript_crypto_ED25519_publicKey(ProScript_crypto_random32Bytes(string_tl3))
+) in
+
+let aliceSignedPreKey   = fun_newKeyPair(string_tl4) in
+let alicePreKey         = fun_newKeyPair(string_tl5) in
+let bobSignedPreKey     = fun_newKeyPair(string_tl6) in
+let bobPreKey           = fun_newKeyPair(string_tl7) in
+let mallorySignedPreKey = fun_newKeyPair(string_tl8) in
+let malloryPreKey       = fun_newKeyPair(string_tl9) in
+
+(
+	Initiator(
+		aliceIdentityKey,
+		aliceSignedPreKey,
+		alicePreKey,
+		Object_keypair_get_pub(bobIdentityKey),
+		fun_getDHPublicKey(Object_keypair_get_priv(bobIdentityKey))
+	) |
+	Responder(
+		bobIdentityKey,
+		bobSignedPreKey,
+		bobPreKey,
+		Object_keypair_get_pub(aliceIdentityKey),
+		fun_getDHPublicKey(Object_keypair_get_priv(aliceIdentityKey))
+	)
+)

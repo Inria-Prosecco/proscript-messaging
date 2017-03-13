@@ -1,0 +1,20 @@
+REQUIREMENTS TO BUILD:
+======================
+
+OCaml 3.12 or newer.
+
+Menhir:
+Ubuntu/Debian: libmenhir-ocaml-dev
+Fedora: ocaml-menhir-devel
+
+PCRE bindings for OCaml
+Ubuntu/Devian: libpcre-ocaml-dev
+Fedora: ocaml-pcre-devel
+
+Ulex unicode tokenizer
+Ubuntu/Debian: ocaml-ulex
+Fedora: ocaml-ulex-devel
+
+Also required for Fedora:
+ocaml-camlp4-devel, ocaml-findlib-devel
+
