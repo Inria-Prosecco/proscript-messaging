@@ -71,7 +71,8 @@ let Initiator(
 			out(io, o3);
 			let them = Object_sendoutput_get_them(s3) in
 			phase 1;
-			out(io, Object_them_get_myEphemeralKeyP1(them))
+			(* out(io, Object_them_get_myEphemeralKeyP1(them)) *)
+			out(io, them)
 		)
 	).
 
