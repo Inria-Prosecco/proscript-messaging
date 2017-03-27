@@ -9,6 +9,7 @@ const string_tl7:bitstring [data].
 const string_tl8:bitstring [data].
 const string_tl9:bitstring [data].
 
+set redundancyElim = no.
 free secMsg1:bitstring [private].
 free secMsg2:bitstring [private].
 free secMsg3:bitstring [private].
@@ -61,7 +62,6 @@ let Initiator(
 		out(io, o1);
 		let them = Object_sendoutput_get_them(s1) in
 		let toLeak = Object_them_get_myEphemeralKeyP1(them) in
-		phase 1;
 		in(io, o3:object_msg);
 		let s4 = fun_recv(initiatorIdentityKey, initiatorSignedPreKey, them, o3) in
 		let o4 = Object_recvoutput_get_output(s4) in
@@ -72,7 +72,7 @@ let Initiator(
 				Object_recvoutput_get_plaintext(s4)
 			);
 			let them = Object_recvoutput_get_them(s4) in
-			phase 2;
+			phase 1;
 			let s5 = fun_send(initiatorIdentityKey, them, secMsg3) in
 			let o5 = Object_sendoutput_get_output(s5) in
 			if (Object_msg_get_valid(o5) = true) then (
@@ -83,7 +83,6 @@ let Initiator(
 				);
 				out(io, o5);
 				let them = Object_sendoutput_get_them(s5) in
-				phase 3;
 				out(io, toLeak)
 			)
 		)
@@ -130,7 +129,6 @@ let Responder(
 			Object_recvoutput_get_plaintext(s2)
 		);
 		let them = Object_recvoutput_get_them(s2) in
-		phase 1;
 		let s3 = fun_send(responderIdentityKey, them, secMsg2) in
 		let o3 = Object_sendoutput_get_output(s3) in
 		if (Object_msg_get_valid(o3) = true) then (
@@ -141,7 +139,7 @@ let Responder(
 			);
 			out(io, o3);
 			let them = Object_sendoutput_get_them(s3) in
-			phase 2;
+			phase 1;
 			in(io, o6:object_msg);
 			let s6 = fun_recv(responderIdentityKey, responderSignedPreKey, them, o6) in
 			let o6 = Object_recvoutput_get_output(s6) in
