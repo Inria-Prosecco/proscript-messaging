@@ -36,7 +36,7 @@ This will generate a model by translating whatever is in `ps/sp.js` and adding t
 On a reasonably fast Intel Xeon machine, these were the verification times we obtained for ProVerif:
 
 * `authenticity-1-abm-oneway`:        00h. 24m. 51s.
-* `authenticity-1-abm-twoway`:        Result coming.
+* `authenticity-1-abm-twoway`:        26h. 10m. 08s.
 * `authenticity-1-ab-oneway`:         00h. 04m. 07s.
 * `authenticity-1-ab-twoway`:         00h. 09m. 25s.
 * `forwardsecrecy-1-ab-oneway`:       00h. 06m. 14s.
