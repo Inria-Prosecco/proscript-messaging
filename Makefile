@@ -1,10 +1,3 @@
-.PHONY: pvl
-
-pvl:
-	cat pvl/types.pvl >> pvl.pvl
-	cat pvl/consts.pvl >> pvl.pvl
-	cat pvl/pscl.pvl >> pvl.pvl
-	cat pvl/protocol.pvl >> pvl.pvl
 clean:
 	rm -f *.pvl *.pv
 secrecy-1-ab-oneway:
