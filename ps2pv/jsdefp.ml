@@ -16,7 +16,6 @@ let inp = (fun s -> (ifiles := s :: !ifiles)) in
     ("--subtypes", Arg.Unit (fun () -> print_subtypes := true), "print the infered type of every expression");
     ("--closed", Arg.Unit (fun () -> closed := true), "do not allow free variables");
     ("--preserve", Arg.Unit (fun () -> preserve := true), "preserve typing env when checking multiple files");
-    ("--php", Arg.Unit (fun () -> php := true), "assume PHP input");
     ("--pv", Arg.Unit (fun () -> pv := true), "convert to ProVerif");
     ("-v", Arg.Unit (fun () -> verbose := true), "verbose output");
     ("--escape-unicode", Arg.Unit (fun ()->escape_unicode:=true), "escape all Unicode characters (ASCII output)");
@@ -30,13 +29,6 @@ let run fn =
   input := (match fn with "<stdio>" -> stdin | s -> Unix.in_channel_of_descr (Unix.openfile s [Unix.O_RDONLY] 0));
   let inbuf = Ulexing.from_utf8_channel !input in
   try
-   if !php then
-   (
-     let parsed = menhir_with_ulex Phplexer.main Phparser.start inbuf in
-     printf "%s" (Phproverif.pv parsed)
-   )
-	 else
-	 (
     let parsed = menhir_with_ulex Lexer.main Parser.main inbuf in
     if !typecheck or !pv then
     (
@@ -46,10 +38,9 @@ let run fn =
       if !pv then printf "%s" (Proverif.pv parsed) 
     )
     else printf "%s" (pretty_print 0 parsed)
-   )
   with
     | LexingError (loc, msg) -> fprintf stderr "%s at %s\n%!" msg (format_position (lexpos_of_loc loc))
-    | Parser.Error | Phparser.Error -> fprintf stderr "Unexpected token <%s> at %s\n%!" !lasttok (format_position (lexpos_of_loc (getloc ())))
+    | Parser.Error -> fprintf stderr "Unexpected token <%s> at %s\n%!" !lasttok (format_position (lexpos_of_loc (getloc ())))
     | Utf8.MalFormed -> fprintf stderr "Invalid UTF-8 input character at %s\n%!" (format_position (lexpos_of_loc (getloc ())))
 
 let _ =

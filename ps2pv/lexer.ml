@@ -36,7 +36,7 @@ let regexp single_escape_seq = ['\'' "\"" '\\' 'b' 'f' 'n' 'r' 't' 'v' '0']
 (* Escaping functions *)
 let escape_single = function "b"->"\x08" | "t"->"\x09" | "n"->"\x0A" | "v"->"\x0B" | "f"->"\x0C" | "r"->"\x0D" | "0" -> "\x00" |_ as s -> s
 let escape_hex x = string_of_bytelist [int_of_string ("0" ^ x)] 
-let escape_unicode x = String.set x 0 'x'; let c = int_of_string ("0"^x) in utf8_char c
+let escape_unicode x = Bytes.set x 0 'x'; let c = int_of_string ("0"^(Bytes.to_string x)) in utf8_char c
 
 (* Keywords and reserved words *)
 let regexp reserved = "class" | "enum" | "extends" | "super" | "const" | "export" | "import"
@@ -96,7 +96,7 @@ let decode_unicode ?allowkw:(kw=false) =
   let urex = Pcre.regexp "\\\\(u[0-9a-fA-F]{4})" in
 	(* Defer identifier checking to PCRE to take advantage of Unicode class support *)
 	let irex = Pcre.regexp ~flags:[`UTF8] "^([$_]|\\p{Lu}|\\p{Ll}|\\p{Lt}|\\p{Lm}|\\p{Lo}|\\p{Nl})([$_]|\\p{Lu}|\\p{Ll}|\\p{Lt}|\\p{Lm}|\\p{Lo}|\\p{Nl}|\\p{Mn}|\\p{Mc}|\\p{Nd}|\\p{Pc}|\\x{200C}|\\x{200D})*$" in
-  let rep s = String.set s 1 '0'; escape_unicode s in
+    let rep s = let y = (Bytes.of_string s) in Bytes.set y 1 '0'; escape_unicode y in
   fun is -> let s = Pcre.substitute ~rex:urex ~subst:rep is in
 	  match Pcre.pmatch ~rex:irex s with
 			| true ->
@@ -171,7 +171,7 @@ and string_scanner quote = lexer
 and string_escape_scanner quote = lexer
   | newline -> nl (); string_scanner quote lexbuf
   | single_escape_seq -> let s = escape_single (utf8_lexeme lexbuf) in c lexbuf; s ^ (string_scanner quote lexbuf)
-  | unicode_escape_seq -> let s = escape_unicode (utf8_lexeme lexbuf) in c lexbuf; s ^ (string_scanner quote lexbuf)
+  | unicode_escape_seq -> let s = escape_unicode (Bytes.of_string (utf8_lexeme lexbuf)) in c lexbuf; s ^ (string_scanner quote lexbuf)
   | hex_escape_seq -> let s = escape_hex (utf8_lexeme lexbuf) in c lexbuf; s ^ (string_scanner quote lexbuf)
   | _ -> c lexbuf; let s = utf8_lexeme lexbuf in lwar (sprintf "Bad escape sequence: \\%s" s); s ^ (string_scanner quote lexbuf)  
 
@@ -185,7 +185,7 @@ and regexp_scanner acc = lexer
 and regexp_escape_scanner = (
  fun acc cl -> let tk = (if cl then regexp_class_scanner else regexp_scanner) in lexer
   | newline | eof -> lerr "Unexpectend end of regexp literal"
-  | unicode_escape_seq -> let s = escape_unicode (utf8_lexeme lexbuf) in c lexbuf; tk (acc^s) lexbuf
+  | unicode_escape_seq -> let s = escape_unicode (Bytes.of_string (utf8_lexeme lexbuf)) in c lexbuf; tk (acc^s) lexbuf
   | hex_escape_seq -> let s = escape_hex (utf8_lexeme lexbuf) in c lexbuf; tk (acc^s) lexbuf
   | ['/'] -> let s = acc^(utf8_lexeme lexbuf) in c lexbuf; tk s lexbuf
   | ['\\' '[' ']' '{' '}' '(' ')' '+' '.' '*' '?' '|' '^' '$' 'B' 'D' 'S' 'W' 'c' 'd' 's'-'x' '0'-'9' '-']

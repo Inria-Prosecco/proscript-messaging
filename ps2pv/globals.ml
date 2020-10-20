@@ -9,7 +9,6 @@ let closed = ref false
 let preserve = ref false
 let re = ref true
 let pv = ref false
-let php = ref false
 let escape_unicode = ref false
 let print_subtypes = ref false
 let pad_len = ref 2
