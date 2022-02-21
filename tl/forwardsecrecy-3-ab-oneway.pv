@@ -82,8 +82,7 @@ let Initiator(
 				out(io, o5);
 				let them = Object_sendoutput_get_them(s5) in
 				phase 1;
-				(* out(io, Object_them_get_myEphemeralKeyP1(them)) *)
-				out(io, them)
+				out(io, initiatorIdentityKey)
 			)
 		)
 	).
@@ -148,7 +147,8 @@ let Responder(
 					Object_keypair_get_pub(responderIdentityKey),
 					Object_recvoutput_get_plaintext(s6)
 				);
-				let them = Object_recvoutput_get_them(s6) in 0
+				let them = Object_recvoutput_get_them(s6) in
+				out(io, responderIdentityKey)
 			)
 		)
 	).
