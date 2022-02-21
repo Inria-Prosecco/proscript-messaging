@@ -15,6 +15,14 @@ The messaging protocol implementation included in this repository is exactly the
 
 ### Instructions
 
+First, install the required OCaml dependencies using `opam`:
+
+```
+opam install ocamlbuild merlin menhir ulex pcre
+```
+
+Now, you can compile:
+
 ```
 cd ps2pv
 make
