@@ -126,6 +126,8 @@ let malloryPreKey       = fun_newKeyPair(string_tl9) in
 	out(io, malloryIdentityKey) |
 	out(io, mallorySignedPreKey) |
 	out(io, malloryPreKey) |
+	out(io, Object_keypair_get_pub(aliceIdentityKey)) |
+	out(io, Object_keypair_get_pub(bobIdentityKey)) |
 	Initiator(
 		aliceIdentityKey,
 		aliceSignedPreKey,

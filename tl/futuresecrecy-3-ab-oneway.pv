@@ -63,6 +63,7 @@ let Initiator(
 		out(io, o1);
 		let them = Object_sendoutput_get_them(s1) in
 		let them_s1 = them in
+		let toLeak = Object_them_get_myEphemeralKeyP1(them) in
 		in(io, o3:object_msg);
 		let s4 = fun_recv(initiatorIdentityKey, initiatorSignedPreKey, them, o3) in
 		let o4 = Object_recvoutput_get_output(s4) in
@@ -84,8 +85,7 @@ let Initiator(
 				);
 				out(io, o5);
 				let them = Object_sendoutput_get_them(s5) in
-				out(io, them_s0);
-				out(io, them_s1)
+				out(io, toLeak)
 			)
 		)
 	).
@@ -179,6 +179,8 @@ let mallorySignedPreKey = fun_newKeyPair(string_tl8) in
 let malloryPreKey       = fun_newKeyPair(string_tl9) in
 
 (
+	out(io, Object_keypair_get_pub(aliceIdentityKey)) |
+	out(io, Object_keypair_get_pub(bobIdentityKey)) |
 	Initiator(
 		aliceIdentityKey,
 		aliceSignedPreKey,

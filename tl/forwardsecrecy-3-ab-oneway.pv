@@ -148,6 +148,7 @@ let Responder(
 					Object_recvoutput_get_plaintext(s6)
 				);
 				let them = Object_recvoutput_get_them(s6) in
+				phase 1;
 				out(io, responderIdentityKey)
 			)
 		)
@@ -176,6 +177,8 @@ let mallorySignedPreKey = fun_newKeyPair(string_tl8) in
 let malloryPreKey       = fun_newKeyPair(string_tl9) in
 
 (
+	out(io, Object_keypair_get_pub(aliceIdentityKey)) |
+	out(io, Object_keypair_get_pub(bobIdentityKey)) |
 	Initiator(
 		aliceIdentityKey,
 		aliceSignedPreKey,
