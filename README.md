@@ -37,7 +37,7 @@ This will generate a model by translating whatever is in `ps/sp.js` and adding t
 * Valid values for `principals`: `AB` (Alice and Bob), `ABM` (Alice, Bob and compromised Mallory)
 * Valid values for `direction`: `oneway`, `twoway`
 
-**Note**: Not all combinations are current available. `ls tl` for current ones.
+**Note**: Not all combinations are currently available. `ls tl` for current ones.
 
 ### Benchmarks
 
