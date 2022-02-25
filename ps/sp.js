@@ -457,7 +457,7 @@ const HANDLE = {
 				preKey: them.preKey,
 				preKeyId: them.preKeyId,
 				recvKeys: them.recvKeys,
-				sendKeys: them.sendKeys,
+				sendKeys: keys.sendKeys,
 				shared: them.shared,
 				established: them.established
 			},
