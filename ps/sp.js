@@ -347,10 +347,7 @@ const RATCHET = {
 			kENC: kKeys[0]
 		};
 	},
-	tryDecrypt: function(myIdentityKey, myEphemeralKey, them, msg) {
-		var keys = RATCHET.deriveRecvKeys(
-			myEphemeralKey.priv, Type_them.assert(them), msg.ephemeralKey
-		);
+	tryDecrypt: function(myIdentityKey, myEphemeralKey, them, keys, msg) {
 		var hENC = Type_key.fromBitstring(ProScript.crypto.SHA256(
 			Type_key.toBitstring(keys.kENC) + Type_iv.toBitstring(msg.iv)
 		));
@@ -475,8 +472,11 @@ const HANDLE = {
 
 	receiving: function(myIdentityKey, them, msg) {
 		var them = Type_them.assert(them);
+		var keys = RATCHET.deriveRecvKeys(
+			them.myEphemeralKeyP1.priv, Type_them.assert(them), msg.ephemeralKey
+		);
 		var dec = RATCHET.tryDecrypt(
-			myIdentityKey, them.myEphemeralKeyP1, them, msg
+			myIdentityKey, them.myEphemeralKeyP1, them, keys, msg
 		);
 		if (dec.valid) {
 			return {
@@ -491,7 +491,7 @@ const HANDLE = {
 					myPreKey: them.myPreKey,
 					preKey: them.preKey,
 					preKeyId: msg.preKeyId,
-					recvKeys: them.recvKeys,
+					recvKeys: keys.recvKeys,
 					sendKeys: them.sendKeys,
 					shared: them.shared,
 					established: them.established
@@ -509,37 +509,71 @@ const HANDLE = {
 			};
 		}
 		else {
-			dec = RATCHET.tryDecrypt(
-				myIdentityKey, them.myEphemeralKeyP0, them, msg
+			keys = RATCHET.deriveRecvKeys(
+				them.myEphemeralKeyP0.priv, Type_them.assert(them), msg.ephemeralKey
 			);
-			return {
-				them: {
-					signedPreKey: them.signedPreKey,
-					signedPreKeySignature: them.signedPreKeySignature,
-					identityKey: them.identityKey,
-					identityDHKey: them.identityDHKey,
-					myEphemeralKeyP0: them.myEphemeralKeyP0,
-					myEphemeralKeyP1: them.myEphemeralKeyP1,
-					ephemeralKey: msg.ephemeralKey,
-					myPreKey: them.myPreKey,
-					preKey: them.preKey,
-					preKeyId: msg.preKeyId,
-					recvKeys: them.recvKeys,
-					sendKeys: them.sendKeys,
-					shared: them.shared,
-					established: them.established
-				},
-				output: {
-					valid: dec.valid && them.established,
-					ephemeralKey: Type_key.construct(),
-					initEphemeralKey: Type_key.construct(),
-					ciphertext: '',
-					iv: Type_iv.construct(),
-					tag: '',
-					preKeyId: msg.preKeyId
-				},
-				plaintext: dec.plaintext
-			};
+			dec = RATCHET.tryDecrypt(
+				myIdentityKey, them.myEphemeralKeyP0, them, keys, msg
+			);
+			if (dec.valid) {
+				return {
+					them: {
+						signedPreKey: them.signedPreKey,
+						signedPreKeySignature: them.signedPreKeySignature,
+						identityKey: them.identityKey,
+						identityDHKey: them.identityDHKey,
+						myEphemeralKeyP0: them.myEphemeralKeyP0,
+						myEphemeralKeyP1: them.myEphemeralKeyP1,
+						ephemeralKey: msg.ephemeralKey,
+						myPreKey: them.myPreKey,
+						preKey: them.preKey,
+						preKeyId: msg.preKeyId,
+						recvKeys: keys.recvKeys,
+						sendKeys: them.sendKeys,
+						shared: them.shared,
+						established: them.established
+					},
+					output: {
+						valid: dec.valid && them.established,
+						ephemeralKey: Type_key.construct(),
+						initEphemeralKey: Type_key.construct(),
+						ciphertext: '',
+						iv: Type_iv.construct(),
+						tag: '',
+						preKeyId: msg.preKeyId
+					},
+					plaintext: dec.plaintext
+				}
+			} else {
+				return {
+					them: {
+						signedPreKey: them.signedPreKey,
+						signedPreKeySignature: them.signedPreKeySignature,
+						identityKey: them.identityKey,
+						identityDHKey: them.identityDHKey,
+						myEphemeralKeyP0: them.myEphemeralKeyP0,
+						myEphemeralKeyP1: them.myEphemeralKeyP1,
+						ephemeralKey: msg.ephemeralKey,
+						myPreKey: them.myPreKey,
+						preKey: them.preKey,
+						preKeyId: msg.preKeyId,
+						recvKeys: them.recvKeys,
+						sendKeys: them.sendKeys,
+						shared: them.shared,
+						established: them.established
+					},
+					output: {
+						valid: dec.valid && them.established,
+						ephemeralKey: Type_key.construct(),
+						initEphemeralKey: Type_key.construct(),
+						ciphertext: '',
+						iv: Type_iv.construct(),
+						tag: '',
+						preKeyId: msg.preKeyId
+					},
+					plaintext: dec.plaintext
+				}
+			}
 		}
 	}
 };
