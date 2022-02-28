@@ -85,7 +85,8 @@ let Initiator(
 				);
 				out(io, o5);
 				let them = Object_sendoutput_get_them(s5) in
-				out(io, them_s1)
+				out(io, them_s1);
+				out(io, Object_keypair_get_priv(initiatorIdentityKey))
 			)
 		)
 	).
