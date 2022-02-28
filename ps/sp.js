@@ -476,7 +476,7 @@ const HANDLE = {
 			them.myEphemeralKeyP1.priv, Type_them.assert(them), msg.ephemeralKey
 		);
 		var dec = RATCHET.tryDecrypt(
-			myIdentityKey, them.myEphemeralKeyP1, them, keys, msg
+			myIdentityKey, them.myEphemeralKeyP1, them, keys, Type_msg.assert(msg)
 		);
 		if (dec.valid) {
 			return {
@@ -513,7 +513,7 @@ const HANDLE = {
 				them.myEphemeralKeyP0.priv, Type_them.assert(them), msg.ephemeralKey
 			);
 			dec = RATCHET.tryDecrypt(
-				myIdentityKey, them.myEphemeralKeyP0, them, keys, msg
+				myIdentityKey, them.myEphemeralKeyP0, them, keys, Type_msg.assert(msg)
 			);
 			if (dec.valid) {
 				return {
