@@ -9,7 +9,9 @@ const string_tl7:bitstring [data].
 const string_tl8:bitstring [data].
 const string_tl9:bitstring [data].
 
-set preciseActions = true.
+(* preciseActions could allow some queries that "cannot be proved" to resolve into concrete results, but will make analysis slower. Use only if needed. *)
+(* set preciseActions = true. *)
+
 free secMsg1:bitstring [private].
 query attacker(secMsg1).
 event Send(key, key, bitstring).
