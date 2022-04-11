@@ -1030,8 +1030,8 @@ fun ProScript_crypto_ED25519_checkValid(bitstring, bitstring, key):bool reduc
 		ProScript_crypto_ED25519_checkValid(s, m, pk) = false.
 fun ProScript_crypto_HMACSHA256(key, bitstring):key.
 reduc forall k:key, m:bitstring; ProScript_crypto_checkHMACSHA256(k, m, ProScript_crypto_HMACSHA256(k, m)) = true.
-fun ProScript_crypto_random32Bytes(bitstring):key [private].
-fun ProScript_crypto_random12Bytes(bitstring):iv  [private].
+letfun ProScript_crypto_random32Bytes(x:bitstring) = new secrkey[]:key; secrkey.
+letfun ProScript_crypto_random12Bytes(x:bitstring) = new secriv[]:iv; secriv.
 fun ProScript_crypto_HKDF_expand(bitstring, bitstring, bitstring, number):bitstring.
 fun ProScript_crypto_tls12_prf_label(bitstring, bitstring, number, number):bitstring.\n\n"
 		| _ -> ())
